@@ -271,7 +271,7 @@ double Powerplant::fComputeParasiticLosses ( void ) const {
 				    _receiverOutletFlow.begin(), 0.0) / MS_DENSITY;
  
   double W_shell = std::inner_product(_pressureShellSide.begin(), _pressureShellSide.end(),
-				      _msRateSteamGen.begin(), 0.0) / MS_DENSITY;
+				      _msRateSteamGen.begin(), 0.0) / MS_DENSITY;  
 
   double W_steam = std::inner_product(_pressureTubesSide.begin(), _pressureTubesSide.end(),
 				      _steamRate.begin(), 0.0) / WATER_DENSITY;

@@ -2,7 +2,7 @@
 /*  SOLAR - The solar thermal power plant simulator - version 1.0.7              */
 /*  https://github.com/bbopt/solar                                               */
 /*                                                                               */
-/*  2025-08-04                                                                   */
+/*  2025-09-24                                                                   */
 /*                                                                               */
 /*  Miguel Diago, Sebastien Le Digabel, Mathieu Lemyre-Garneau, Bastien Talgorn  */
 /*  Philippe Brillon (P.B.) for version 2                                        */
@@ -43,7 +43,7 @@
 #include "sampling.hpp"
 
 // version:
-const std::string VERSION = "1.0.7, 2025-08-04";
+const std::string VERSION = "1.0.8, 2025-09-24";
 
 // validation functions:
 bool check ( bool fast );

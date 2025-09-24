@@ -1438,10 +1438,10 @@ bool Scenario::simulate_minCost_C2 ( double fidelity, double * outputs , bool & 
     
       // creating required objects:
       construct_minCost_C2 ( cnt_eval );
-    
+      
       // launching simulation:
       _powerplant->fSimulatePowerplant ( false );
-
+      
       // objective function: total investment cost:
       outputs[0] = _powerplant->get_costOfHeliostatField()
 	+ _powerplant->get_costOfTower()
@@ -1481,8 +1481,9 @@ bool Scenario::simulate_minCost_C2 ( double fidelity, double * outputs , bool & 
       // c13: Parasitics do not exceed 20% of energy production
       {
 	double sum = 1.0;
-	for ( unsigned int i = 0; i < _powerplant->get_powerplantPowerOutput().size(); ++i )
+	for ( unsigned int i = 0; i < _powerplant->get_powerplantPowerOutput().size(); ++i ) {
 	  sum += _powerplant->get_powerplantPowerOutput()[i];
+	}	
 	outputs[13] = _powerplant->fComputeParasiticLosses()/sum - _cParasitics;
       }
    

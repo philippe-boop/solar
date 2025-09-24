@@ -223,6 +223,12 @@ double HeatExchanger::fComputeRequiredMoltenSaltMassFlow ( double energyOutputRe
   
   T_in_ms  = inputMSTemp;
   T_out_ms = _output->get_temperature();
+
+  // bug corrected in version 1.0.8 by SLD (2025-09-24)
+  if ( isnan(T_in_ms) || isnan(T_out_ms) ) {
+    throw Simulation_Interruption ( "Problem with the molten salt temperatures" );   
+  }
+  
   T_in_w   = _inletWaterTemperature;
   T_out_w  = _powerblock->get_temperature();
   
@@ -242,7 +248,7 @@ double HeatExchanger::fComputeRequiredMoltenSaltMassFlow ( double energyOutputRe
 
   //Finding first draft for m_dot
   m_dot_ms1 = Q_to_water / (c_ms*(T_in_ms - T_out_ms));
-
+  
   if ( m_dot_ms1 > maximumFlow ) { 
     _heatTransferred.push_back(0.0);
     return 0.0;
@@ -337,8 +343,6 @@ double HeatExchanger::fComputeRequiredMoltenSaltMassFlow ( double energyOutputRe
   Q_to_water = 0.0;
   Q1 = 0.0;
   Del_m = m_dot_ms1;
-
-
   
   try {
 
@@ -434,7 +438,7 @@ double HeatExchanger::fComputeRequiredMoltenSaltMassFlow ( double energyOutputRe
   }
   catch (...) {
     T_out_ms  = T_in_ms - Q_to_water / (h_w_o - h_w_i);
-    m_dot_ms1 = energyOutputRequired / (c_ms*(T_in_ms - T_out_ms));
+    m_dot_ms1 = energyOutputRequired / (c_ms*(T_in_ms - T_out_ms));   
   }
 
   if ( m_dot_ms1 > maximumFlow || m_dot_ms1 < 0.0 ) {
@@ -444,7 +448,7 @@ double HeatExchanger::fComputeRequiredMoltenSaltMassFlow ( double energyOutputRe
     return 0.0;
   }
   _output->set_temperature(T_out_ms);
-  _output->set_massFlow(m_dot_ms1);
+  _output->set_massFlow(m_dot_ms1); 
   _input->set_massFlow(m_dot_ms1);
   _heatTransferred.push_back(Q_to_water);
   
@@ -530,6 +534,7 @@ double HeatExchanger::computePressureInShells ( void ) const {
   int    n_w, n_wE, N_c;
 
   m_dot_ms = _input->get_massFlow();
+  
   if ( m_dot_ms == 0.0)
     return 0.0;
 
@@ -618,9 +623,9 @@ double HeatExchanger::computePressureInShells ( void ) const {
   eps_s = 2.0;
   w_s = (m_dot_ms / rho) / _nozzlesArea;
   dP_S = eps_s * rho * w_s*w_s / 2.0;
-
+  
   //final value for dP
   dP = _nbOfShells*((_nbOfBaffles - 1)*dP_Q + 2*dP_QE + _nbOfBaffles*dP_F + dP_S);
- 
+  
   return dP;
 }
