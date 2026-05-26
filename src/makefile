@@ -1,7 +1,7 @@
 EXE                = ../bin/solar
 COMPILATOR         = g++
 COMPILATOR_OPTIONS = -O3 -Wall -Wextra -pedantic -Wcast-align
-LIBS               = -lc -lm
+LIBS               = #P.B. 05-2026 : removed "-lc -lm" for compilation on Windows
 INCLUDE            = -I.
 COMPILE            = $(COMPILATOR) $(COMPILATOR_OPTIONS) $(INCLUDE) -c
 OBJS               = main.o CentralReceiver.o Time_Manager.o Economics.o Global.o Turbine.o \

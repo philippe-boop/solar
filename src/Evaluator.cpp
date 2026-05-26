@@ -670,6 +670,26 @@ void Evaluator::display_outputs ( void ) const {
   // solar 10:
   else if ( pb_id == "MINCOST_UNCONSTRAINED" )
     _out << std::setprecision(8) << _outputs[0];
+
+  // solar 11:
+  else if ( pb_id == "MINCOST_CH" )                     // New instance : MINCOST_CH (P.B. 05-2026)
+    _out << std::setprecision(12) << _outputs[0] << " "
+	 << _outputs[1] << " "
+	 << _outputs[2] << " "
+	 << _outputs[3] << " "
+	 << _outputs[4] << " "
+	 << _outputs[5] << " "
+	 << _outputs[6] << " "
+	 << std::setprecision( 8) << _outputs[7] << " "
+	 << std::setprecision( 8) << _outputs[8] << " "
+	 << std::setprecision( 8) << _outputs[9] << " "
+	 << std::setprecision(12) << _outputs[10] << " "
+	 << _outputs[11] << " "
+	 << _outputs[12] << " "
+	 << std::setprecision(10) << _outputs[13] << " "
+	 << std::setprecision(12) << _outputs[14] << " "
+	 << _outputs[15] << " "
+	 << _outputs[16] << std::setprecision(12);
 }
 
 void Evaluator::display_intermediate_outputs ( void ) const {

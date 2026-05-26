@@ -1007,12 +1007,12 @@ bool Scenario::set_x_minCost_CH ( const double * x ) {
   // check discrete variables:
   // -------------------------
   if ( !is_int(x[ 5]) ||
-       !is_int(x[15]) ||
-       !is_int(x[24]) ||
-       !is_int(x[25]) ||
+       !is_int(x[17]) ||
        !is_int(x[26]) ||
        !is_int(x[27]) ||
-       !is_int(x[28])    )
+       !is_int(x[28]) ||
+       !is_int(x[29]) ||
+       !is_int(x[30])    )
     throw std::invalid_argument ( "Problem with input: One of the discrete variables has a non-integer value" );
  
   // assign variables:
@@ -1032,28 +1032,28 @@ bool Scenario::set_x_minCost_CH ( const double * x ) {
   // Htf cycle:
   _centralReceiverOutletTemperature = x[ 9];
   _hotStorageHeight                 = x[10];
-  _coldStorageHeight                = x[29];
-  _hotStorageDiameter               = x[11];
-  _coldStorageDiameter              = x[30];
-  _hotStorageInsulThickness         = x[12];
-  _coldStorageInsulThickness        = x[13];
-  _coldMoltenSaltMinTemperature     = x[14];
-  _receiverNbOfTubes                = myround(x[15]);
-  _receiverInsulThickness           = x[16];
-  _receiverTubesInsideDiam          = x[17];
-  _receiverTubesOutsideDiam         = x[18];
-  _exchangerTubesSpacing            = x[19];
-  _exchangerTubesLength             = x[20];
-  _exchangerTubesDin                = x[21];
-  _exchangerTubesDout               = x[22];
-  _exchangerBaffleCut               = x[23];
-  _exchangerNbOfBaffles             = myround(x[24]);
-  _exchangerNbOfTubes               = myround(x[25]);
-  _exchangerNbOfShells              = myround(x[26]);
-  _exchangerNbOfPassesPerShell      = myround(x[27]);
+  _coldStorageHeight                = x[11];
+  _hotStorageDiameter               = x[12];
+  _coldStorageDiameter              = x[13];
+  _hotStorageInsulThickness         = x[14];
+  _coldStorageInsulThickness        = x[15];
+  _coldMoltenSaltMinTemperature     = x[16];
+  _receiverNbOfTubes                = myround(x[17]);
+  _receiverInsulThickness           = x[18];
+  _receiverTubesInsideDiam          = x[19];
+  _receiverTubesOutsideDiam         = x[20];
+  _exchangerTubesSpacing            = x[21];
+  _exchangerTubesLength             = x[22];
+  _exchangerTubesDin                = x[23];
+  _exchangerTubesDout               = x[24];
+  _exchangerBaffleCut               = x[25];
+  _exchangerNbOfBaffles             = myround(x[26]);
+  _exchangerNbOfTubes               = myround(x[27]);
+  _exchangerNbOfShells              = myround(x[28]);
+  _exchangerNbOfPassesPerShell      = myround(x[29]);
 
   // Powerblock:
-  if ( !set_typeOfTurbine ( myround(x[28]) ) )
+  if ( !set_typeOfTurbine ( myround(x[30]) ) )
     throw std::invalid_argument ( "Problem with input: Type of turbine is not in {1, 2, ..., 8}" );
 
   // check bounds:
@@ -1438,10 +1438,10 @@ bool Scenario::simulate_minCost_C2 ( double fidelity, double * outputs , bool & 
     
       // creating required objects:
       construct_minCost_C2 ( cnt_eval );
-      
+    
       // launching simulation:
       _powerplant->fSimulatePowerplant ( false );
-      
+
       // objective function: total investment cost:
       outputs[0] = _powerplant->get_costOfHeliostatField()
 	+ _powerplant->get_costOfTower()
@@ -1481,9 +1481,8 @@ bool Scenario::simulate_minCost_C2 ( double fidelity, double * outputs , bool & 
       // c13: Parasitics do not exceed 20% of energy production
       {
 	double sum = 1.0;
-	for ( unsigned int i = 0; i < _powerplant->get_powerplantPowerOutput().size(); ++i ) {
+	for ( unsigned int i = 0; i < _powerplant->get_powerplantPowerOutput().size(); ++i )
 	  sum += _powerplant->get_powerplantPowerOutput()[i];
-	}	
 	outputs[13] = _powerplant->fComputeParasiticLosses()/sum - _cParasitics;
       }
    

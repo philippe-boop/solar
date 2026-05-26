@@ -224,8 +224,8 @@ double HeatExchanger::fComputeRequiredMoltenSaltMassFlow ( double energyOutputRe
   T_in_ms  = inputMSTemp;
   T_out_ms = _output->get_temperature();
 
-  // bug corrected in version 1.0.8 by SLD (2025-09-24)
-  if ( isnan(T_in_ms) || isnan(T_out_ms) ) {
+  // bug corrected in version 1.0.8 by SLD (2025-09-24) //P.B. 05-2026 Added "std::" for compilation on windows
+  if ( std::isnan(T_in_ms) || std::isnan(T_out_ms) ) {
     throw Simulation_Interruption ( "Problem with the molten salt temperatures" );   
   }
   

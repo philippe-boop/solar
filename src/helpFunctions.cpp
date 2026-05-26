@@ -856,28 +856,28 @@ void print_minCost_CH ( std::ostream & out ) {
       << "\tHeat transfer loop:\n"
       << "\t\tx10: Receiver outlet temperature (K)      : Real in [793;995]\n"
       << "\t\tx11: Hot storage height    (m)            : Real in [1;50]\n"
-      << "\t\tx30: Cold storage height   (m)            : Real in [1;50]\n" 
-      << "\t\tx12: Hot storage diameter  (m)            : Real in [1;30]\n"
-      << "\t\tx31: Cold storage diameter (m)            : Real in [1;30]\n"
-      << "\t\tx13: Hot storage insulation thickness  (m): Real in [0.01;5]\n"
-      << "\t\tx14: Cold storage insulation thickness (m): Real in [0.01;5]\n"
-      << "\t\tx15: Mininum cold storage temperature  (K): Real in [495;650]\n"
-      << "\t\tx16: Receiver number of tubes             : Integer in {1,2,...,7853}\n"
-      << "\t\tx17: Receiver insulation thickness     (m): Real in [0.01 ;5  ]\n"
-      << "\t\tx18: Receiver tubes inner diameter     (m): Real in [0.005;0.1]\n"
-      << "\t\tx19: Receiver tubes outer diameter     (m): Real in [0.006;0.1]\n"
+      << "\t\tx12: Cold storage height   (m)            : Real in [1;50]\n" 
+      << "\t\tx13: Hot storage diameter  (m)            : Real in [1;30]\n"
+      << "\t\tx14: Cold storage diameter (m)            : Real in [1;30]\n"
+      << "\t\tx15: Hot storage insulation thickness  (m): Real in [0.01;5]\n"
+      << "\t\tx16: Cold storage insulation thickness (m): Real in [0.01;5]\n"
+      << "\t\tx17: Mininum cold storage temperature  (K): Real in [495;650]\n"
+      << "\t\tx18: Receiver number of tubes             : Integer in {1,2,...,7853}\n"
+      << "\t\tx19: Receiver insulation thickness     (m): Real in [0.01 ;5  ]\n"
+      << "\t\tx20: Receiver tubes inner diameter     (m): Real in [0.005;0.1]\n"
+      << "\t\tx21: Receiver tubes outer diameter     (m): Real in [0.006;0.1]\n"
       << "\tSteam generator:\n"
-      << "\t\tx20: Tubes spacing (m)       : Real in [0.007;0.2]\n"
-      << "\t\tx21: Tubes length  (m)       : Real in [0.5;10]\n"
-      << "\t\tx22: Tubes inner diameter (m): Real in [0.005;0.1]\n"
-      << "\t\tx23: Tubes outer diameter (m): Real in [0.006;0.1]\n"
-      << "\t\tx24: Baffles cut             : Real in [0.15;0.4]\n"
-      << "\t\tx25: Number of baffles       : Integer >= 2\n"   
-      << "\t\tx26: Number of tubes         : Integer >= 1\n"
-      << "\t\tx27: Number of shell passes  : Integer in {1, 2, ..., 10}\n"
-      << "\t\tx28: Number of tubes passes  : Integer in {1, 2, ..., 9}\n"   
+      << "\t\tx22: Tubes spacing (m)       : Real in [0.007;0.2]\n"
+      << "\t\tx23: Tubes length  (m)       : Real in [0.5;10]\n"
+      << "\t\tx24: Tubes inner diameter (m): Real in [0.005;0.1]\n"
+      << "\t\tx25: Tubes outer diameter (m): Real in [0.006;0.1]\n"
+      << "\t\tx26: Baffles cut             : Real in [0.15;0.4]\n"
+      << "\t\tx27: Number of baffles       : Integer >= 2\n"   
+      << "\t\tx28: Number of tubes         : Integer >= 1\n"
+      << "\t\tx29: Number of shell passes  : Integer in {1, 2, ..., 10}\n"
+      << "\t\tx30: Number of tubes passes  : Integer in {1, 2, ..., 9}\n"   
       << "\tPowerblock:\n"
-      << "\t\tx29: Type of turbine: Categorical: Integer in {1, 2, ..., 8}\n"
+      << "\t\tx31: Type of turbine: Categorical: Integer in {1, 2, ..., 8}\n"
       << std::endl
       << "Constraints (outputs 2 to 17 with format ci <= 0):\n"
       << "\t c1: Field surface area: A priori constraint: PI*x3*x3(x9*x9-x8*x8) * x7/180 <= 2e6\n"
@@ -902,8 +902,8 @@ void print_minCost_CH ( std::ostream & out ) {
       << "\tDIMENSION        " << 31 << std::endl
       << "\tBB_EXE           " << "$SOLAR_HOME/bin/solar $11" << std::endl
       << "\tBB_OUTPUT_TYPE   " << "OBJ CSTR CSTR CSTR CSTR CSTR CSTR CSTR CSTR CSTR CSTR CSTR CSTR CSTR CSTR CSTR CSTR" << std::endl
-      << "\tBB_INPUT_TYPE    " << "(    R    R     R    R    R    I    R    R    R     R    R    R    R    R     R    I    R      R     R     R    R      R     R    R I     I  I I I R    R)"    << std::endl
-      << "\tLOWER_BOUND      " << "(  1.0  1.0  20.0  1.0  1.0    1  1.0  0.0  1.0 793.0  1.0  1.0 0.01 0.01 495.0    1 0.01 0.0050 0.006 0.007  0.5 0.0050 0.006 0.15 2     1  1 1 1 1.0  1.0)"  << std::endl
-      << "\tX0               " << "(  9.0  9.0 150.0  6.0  8.0 1000 45.0  0.5  5.0 900.0  9.0  9.0 0.30 0.20 560.0  500 0.30 0.0165 0.018 0.017 10.0 0.0155 0.016 0.20 3 12000  1 2 2 9.0  9.0)"  << std::endl  
-      << "\tUPPER_BOUND      " << "( 40.0 40.0 250.0 30.0 30.0    - 89.0 20.0 20.0 995.0 50.0 30.0 5.00 5.00 650.0 7853 5.00 0.1000 0.100 0.200 10.0 0.1000 0.100 0.40 -     - 10 9 8 50.0 30.0)" << std::endl;
+      << "\tBB_INPUT_TYPE    " << "(    R    R     R    R    R    I    R    R    R     R    R  R        R     R     R    R     R    I    R      R     R     R    R      R     R    R I     I  I I I)"  << std::endl
+      << "\tLOWER_BOUND      " << "(  1.0  1.0  20.0  1.0  1.0    1  1.0  0.0  1.0 793.0  1.0   1.0   1.0   1.0  0.01 0.01 495.0    1 0.01 0.0050 0.006 0.007  0.5 0.0050 0.006 0.15 2     1  1 1 1)"  << std::endl
+      << "\tX0               " << "(  9.0  9.0 150.0  6.0  8.0 1000 45.0  0.5  5.0 900.0  9.0   9.0   9.0   9.0  0.30 0.20 560.0  500 0.30 0.0165 0.018 0.017 10.0 0.0155 0.016 0.20 3 12000  1 2 2)"  << std::endl  
+      << "\tUPPER_BOUND      " << "( 40.0 40.0 250.0 30.0 30.0    - 89.0 20.0 20.0 995.0 50.0  50.0  30.0  30.0  5.00 5.00 650.0 7853 5.00 0.1000 0.100 0.200 10.0 0.1000 0.100 0.40 -     - 10 9 8)"  << std::endl;
 }
