@@ -672,7 +672,7 @@ void Evaluator::display_outputs ( void ) const {
     _out << std::setprecision(8) << _outputs[0];
 
   // solar 11:
-  else if ( pb_id == "MINCOST_CH" )                     // New instance : MINCOST_CH (P.B. 05-2026)
+  else if ( pb_id == "MINCOST_CH" )                     // New instance : MINCOST_CH (P.B. 2026-05)
     _out << std::setprecision(12) << _outputs[0] << " "
 	 << _outputs[1] << " "
 	 << _outputs[2] << " "

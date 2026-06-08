@@ -61,6 +61,11 @@ CentralReceiver::CentralReceiver ( MoltenSalt* input               ,
 /*----------------------------------------------------------------------------*/
 double CentralReceiver::computeEnergyToFluid ( double Q_in ) {
 
+  //P.B. 2026-06 : These parameters now depend on the type of molten salt
+  double saltHeatCapacity = _input->get_heatCapacity();
+  double saltDensity      = _input->get_density();
+  double saltConductivity = _input->get_conductivity();
+
   // the procedure will go through if energy is inputed from the field
   if (Q_in <= 0.0){ 
     _losses.push_back(0.0);
@@ -82,7 +87,7 @@ double CentralReceiver::computeEnergyToFluid ( double Q_in ) {
   int count  = 0;
   int count2 = 0;
   
-  m_dot_2 = eff * Q_in / (HEAT_CAPACITY * (To - Ti));
+  m_dot_2 = eff * Q_in / (saltHeatCapacity * (To - Ti)); //P.B. 2026-06
   
   try {
 
@@ -93,9 +98,9 @@ double CentralReceiver::computeEnergyToFluid ( double Q_in ) {
       Q_tot1  = 0.0;
       m_dot_1 = m_dot_2;
 
-      V  = m_dot_1 / (1.0* _numberOfTubes * MS_DENSITY * PI * pow(_tubesInsideDiameter, 2.0) / 4.0);
-      Re = MS_DENSITY * V * _tubesInsideDiameter / mu;
-      Pr = HEAT_CAPACITY * mu / MS_CONDUCTIVITY;
+      V  = m_dot_1 / (1.0* _numberOfTubes * saltDensity * PI * pow(_tubesInsideDiameter, 2.0) / 4.0); //P.B. 2026-06
+      Re = saltDensity * V * _tubesInsideDiameter / mu; //P.B. 2026-06
+      Pr = saltHeatCapacity * mu / saltConductivity; //P.B. 2026-06
       
       if (Re <= 3000.0) {
 	// for low Re the flow will be laminar and we can't use this
@@ -109,7 +114,7 @@ double CentralReceiver::computeEnergyToFluid ( double Q_in ) {
 	Nus = ((f / 8.0)*(Re - 1000)*Pr) / (1.0 + 12.7*sqrt(f / 8.0)*(pow(Pr, 2.0 / 3.0) - 1.0));
       }
       
-      h_ms = Nus * MS_CONDUCTIVITY / _tubesInsideDiameter;
+      h_ms = Nus * saltConductivity / _tubesInsideDiameter; //P.B. 2026-06
       T_re_sur = (eff * Q_in / (_numberOfTubes*_numberOfPasses * _apertureHeight) )
 	* ( (_tubesOutsideDiameter / (h_ms * _tubesInsideDiameter))													+ ((_tubesOutsideDiameter / (2.*SS_COND)) * log(_tubesOutsideDiameter / _tubesInsideDiameter)) )
 	+ T_ms;
@@ -155,7 +160,7 @@ double CentralReceiver::computeEnergyToFluid ( double Q_in ) {
       }
       
       eff     = 1 - (Q_loss / Q_in);
-      m_dot_2 = eff * Q_in / (HEAT_CAPACITY * (To - Ti));
+      m_dot_2 = eff * Q_in / (saltHeatCapacity * (To - Ti));
       
       ++count;
     }
@@ -333,7 +338,7 @@ double CentralReceiver::computePressureInTubes ( void ) const {
   
   
   double A_tubes = PI * pow ( _tubesInsideDiameter / 2.0, 2.0 ); //m^2
-  double V       = _input->get_massFlow() / (MS_DENSITY * A_tubes * _numberOfTubes); //m/s
+  double V       = _input->get_massFlow() / (_input->get_density() * A_tubes * _numberOfTubes); //[m/s] P.B. 2026-06
   double mu      = MoltenSalt::fComputeViscosity(_input->get_temperature());
   double Re      = V * _tubesInsideDiameter / mu;
   double Lambda;
@@ -348,7 +353,7 @@ double CentralReceiver::computePressureInTubes ( void ) const {
     else {      
       throw std::out_of_range ( "Reynolds number out of range" );
     }
-    return Lambda * _apertureHeight * _numberOfPasses * MS_DENSITY * V*V / (8.0 * A_tubes / (PI*_tubesInsideDiameter));
+    return Lambda * _apertureHeight * _numberOfPasses * _input->get_density() * V*V / (8.0 * A_tubes / (PI*_tubesInsideDiameter)); //P.B. 2026-06
   }
   return 0.0;
 }

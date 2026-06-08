@@ -46,7 +46,9 @@ Economics::Economics ( int    numberOfHeliostats          ,
 		       double exchangerTubesLength        , 
 		       int    exchangerNumberOfTubes      ,
 		       int    exchangerTubePassesPerShell ,
-		       int    exchangerNumberOfShell        ) :
+		       int    exchangerNumberOfShell      ,
+           double saltDensity                 , //P.B. 2026-06
+           double costOfSaltPerKg           ) : //P.B. 2026-06
   _nbOfHeliostats                 ( numberOfHeliostats          ) , 
   _hotStorageInsulationThickness  ( hotStorageInsul             ) ,
   _coldStorageInsulationThickness ( coldStorageInsul            ) ,
@@ -67,7 +69,9 @@ Economics::Economics ( int    numberOfHeliostats          ,
   _exchangerTubesLength           ( exchangerTubesLength        ) ,
   _exchangerNumberOfTubes         ( exchangerNumberOfTubes      ) ,
   _exchangerTubePassesPerShell    ( exchangerTubePassesPerShell ) ,
-  _exchangerNumberOfShell         ( exchangerNumberOfShell      )   {
+  _exchangerNumberOfShell         ( exchangerNumberOfShell      ) ,
+  _saltDensity                    ( saltDensity                 ) ,
+  _costOfSaltPerKg                ( costOfSaltPerKg             ){
 
   _costOfField           = 0.0;
   _costPerHeliostat      = 0.0;
@@ -183,14 +187,12 @@ double Economics::evaluateCostOfReceiver ( void ) {
 double Economics::evaluateCostOfStorage ( void ) {
 /*--------------------------------------------------------*/
   
-  double moltenSaltPerKg = COST_NANO3_KNO3; // $/kg
-  
   // Total molten salt inventory is assumed to be that of the volume of the full cold tank
 
   // double moltenSaltVolume  = _hotStorageHeight*1.1*PI*pow(_hotStorageDiameter / 2.0, 2.0); // OLD VERSION (v1)
   double moltenSaltVolume     = _coldStorageHeight   *PI*pow(_coldStorageDiameter / 2.0, 2.0); // NEW VERSION (v2, P.B., SLD, 2025-07-30)
-  double totalMoltenSaltMass = moltenSaltVolume*MS_DENSITY;
-  double moltenSaltCost       = moltenSaltPerKg * totalMoltenSaltMass;
+  double totalMoltenSaltMass = moltenSaltVolume*_saltDensity;
+  double moltenSaltCost       = _costOfSaltPerKg * totalMoltenSaltMass; //P.B. 2026-06
 
   // OLD VERSION (v1):
   // double insulationVolume = PI*_hotStorageHeight*(pow(_hotStorageDiameter / 2.0 +

@@ -39,9 +39,18 @@ private:
   double _massFlow;    // in kg/s
   double _viscosity;   // in kg/ms
 
+  //P.B. 2026-06
+  int _id;
+  double _meltingPoint;     // in K
+  double _maxOperatingTemp; // in K
+  double _density;          // in kg*m^-3
+  double _heatCapacity;     // in J/(kg*K)
+  double _conductivity;     // in W/(m*K)
+  double _cost;             // in USD/kg
+
 public:
   
-  MoltenSalt ( double, double, double );
+  MoltenSalt ( double, double, double, int ); //P.B. 2026-06 : Modified this contructor 
   MoltenSalt ( double, double );
   MoltenSalt ( MoltenSalt& );
 
@@ -50,7 +59,15 @@ public:
   double get_pressure    ( void ) const{ return _pressure; }
   double get_massFlow    ( void ) const{ return _massFlow; }
   double get_viscosity   ( void ) const { return _viscosity; }
-  
+
+  //P.B. 2026-06
+  double get_meltingPoint     ( void ) const{ return _meltingPoint; }
+  double get_maxOperatingTemp ( void ) const{ return _maxOperatingTemp;}
+  double get_density          ( void ) const{ return _density; }
+  double get_heatCapacity     ( void ) const{ return _heatCapacity; }
+  double get_conductivity     ( void ) const{ return _conductivity; }
+  double get_cost             ( void ) const{ return _cost;}
+
   void set_pressure      ( double pres) { _pressure = pres; }
   void set_massFlow      ( double masf) { _massFlow = masf; }
   void set_temperature   ( double );

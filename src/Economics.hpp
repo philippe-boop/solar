@@ -52,6 +52,8 @@ private:
   int    _exchangerNumberOfTubes;
   int    _exchangerTubePassesPerShell;
   int    _exchangerNumberOfShell;
+  double _saltDensity;      //P.B. 2026-06 
+  double _costOfSaltPerKg;  //P.B. 2026-06
   double _costOfField;
   double _costPerHeliostat;
   double _costOfTower;
@@ -84,7 +86,9 @@ public:
 	      double exchangerTubesLength        , 
 	      int    exchangerNumberOfTubes      ,
 	      int    exchangerTubePassesPerShell ,
-	      int    exchangerNumberOfShell        );
+	      int    exchangerNumberOfShell      , 
+        double saltDensity                 , //P.B. 2026-06
+        double costOfSaltPerKg            ); //P.B. 2026-06
 
   // compute costs:
   double evaluateCostOfField          ( void );

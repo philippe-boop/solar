@@ -3167,8 +3167,9 @@ void Scenario::construct_maxNrg_H1 ( bool & cnt_eval ) {
     				1.0                             ,    // V2: should be _exchangerTubesLength;        it is kept to keep the same results as V1 (SLD, P.B.)
     				1                               ,    // V2: should be _exchangerNbOfTubes;          it is kept to keep the same results as V1 (SLD, P.B.)
     				1                               ,    // V2: should be _exchangerNbOfPassesPerShell; it is kept to keep the same results as V1 (SLD, P.B.)
-    				1                                 ); // V2: should be _exchangerNbOfShells;         it is kept to keep the same results as V1 (SLD, P.B.)
-
+    				1                               ,    // V2: should be _exchangerNbOfShells;         it is kept to keep the same results as V1 (SLD, P.B.)
+            1840.0                          ,    // P.B. 2026-06 : density and cost of Solar salt.
+            1.2                            );
     
   }
   catch ( const std::exception & e ) {   
@@ -3242,7 +3243,8 @@ void Scenario::construct_minSurf_H1 ( bool & cnt_eval ) {
 			      _receiverTubesInsideDiam          ,
 			      _receiverTubesOutsideDiam         ,
 			      _receiverNbOfTubes                ,
-			      _minutesPerTimeIncrement            );
+			      _minutesPerTimeIncrement          ,
+            1  );                               //P.B. 2026-06 : Solar salt is used
 
     htfCycle->setStorage ( _storageStartupCondition               ,
 			   0.98*_centralReceiverOutletTemperature ,
@@ -3269,8 +3271,10 @@ void Scenario::construct_minSurf_H1 ( bool & cnt_eval ) {
     				1.0                             ,    // V2: should be _exchangerTubesLength;        it is kept to keep the same results as V1 (SLD, P.B.)
     				1                               ,    // V2: should be _exchangerNbOfTubes;          it is kept to keep the same results as V1 (SLD, P.B.)
     				1                               ,    // V2: should be _exchangerNbOfPassesPerShell; it is kept to keep the same results as V1 (SLD, P.B.)
-    				1                                 ); // V2: should be _exchangerNbOfShells;         it is kept to keep the same results as V1 (SLD, P.B.)
-  }
+    				1                               ,    // V2: should be _exchangerNbOfShells;         it is kept to keep the same results as V1 (SLD, P.B.)
+            htfCycle->get_saltDensity()     ,    //P.B. 2026-06
+            htfCycle->get_saltCost()       );    //P.B. 2026-06
+          }
   catch ( const std::exception & e ) {
     if ( field      ) delete field;
     if ( htfCycle   ) delete htfCycle;
@@ -3344,7 +3348,8 @@ void Scenario::construct_minCost_C1 ( bool & cnt_eval ) {
 			      _receiverTubesInsideDiam          ,
 			      _receiverTubesOutsideDiam         ,
 			      _receiverNbOfTubes                ,
-			      _minutesPerTimeIncrement 	          );
+			      _minutesPerTimeIncrement          ,
+            1 	          );                    //P.B. 2026-06 : Solar salt is used
     htfCycle->initiateColdStorage();
   
     // investment cost model:
@@ -3368,12 +3373,9 @@ void Scenario::construct_minCost_C1 ( bool & cnt_eval ) {
     				1.0                             ,    // V2: should be _exchangerTubesLength;        it is kept to keep the same results as V1 (SLD, P.B.)
     				1                               ,    // V2: should be _exchangerNbOfTubes;          it is kept to keep the same results as V1 (SLD, P.B.)
     				1                               ,    // V2: should be _exchangerNbOfPassesPerShell; it is kept to keep the same results as V1 (SLD, P.B.)
-    				1                                 ); // V2: should be _exchangerNbOfShells;         it is kept to keep the same results as V1 (SLD, P.B.)
-
-
-
-
-    
+    				1                               , // V2: should be _exchangerNbOfShells;         it is kept to keep the same results as V1 (SLD, P.B.)
+            htfCycle->get_saltDensity()     ,    //P.B. 2026-06
+            htfCycle->get_saltCost()       );    //P.B. 2026-06
   }
   catch ( const std::exception & e ) {
     if ( field      ) delete field;
@@ -3458,7 +3460,8 @@ void Scenario::construct_minCost_C2 ( bool & cnt_eval ) {
 			      _exchangerNbOfBaffles             ,
 			      _exchangerNbOfTubes               ,
 			      _exchangerNbOfPassesPerShell      ,
-			      _exchangerNbOfShells                );
+			      _exchangerNbOfShells              ,
+            1  );                               //P.B. 2026-06 : Solar salt is used
     
     htfCycle->initiateColdStorage();
     
@@ -3483,8 +3486,9 @@ void Scenario::construct_minCost_C2 ( bool & cnt_eval ) {
     				1.0                             ,    // V2: should be _exchangerTubesLength;        it is kept to keep the same results as V1 (SLD, P.B.)
     				1                               ,    // V2: should be _exchangerNbOfTubes;          it is kept to keep the same results as V1 (SLD, P.B.)
     				1                               ,    // V2: should be _exchangerNbOfPassesPerShell; it is kept to keep the same results as V1 (SLD, P.B.)
-    				1                                 ); // V2: should be _exchangerNbOfShells;         it is kept to keep the same results as V1 (SLD, P.B.)
-
+    				1                               ,    // V2: should be _exchangerNbOfShells;         it is kept to keep the same results as V1 (SLD, P.B.)
+            htfCycle->get_saltDensity()     ,    //P.B. 2026-06
+            htfCycle->get_saltCost()       );    //P.B. 2026-06
     
   }
   catch ( const std::exception & e ) {
@@ -3570,7 +3574,8 @@ void Scenario::construct_maxComp_HTF1 ( bool & cnt_eval ) {
 			      _exchangerNbOfBaffles             ,
 			      _exchangerNbOfTubes               ,
 			      _exchangerNbOfPassesPerShell      ,
-			      _exchangerNbOfShells 	        );
+			      _exchangerNbOfShells 	            ,
+            1 );                                //P.B. 2026-06 : Solar salt is used
     
     htfCycle->initiateColdStorage();
 
@@ -3595,8 +3600,9 @@ void Scenario::construct_maxComp_HTF1 ( bool & cnt_eval ) {
     				1.0                             ,    // V2: should be _exchangerTubesLength;        it is kept to keep the same results as V1 (SLD, P.B.)
     				1                               ,    // V2: should be _exchangerNbOfTubes;          it is kept to keep the same results as V1 (SLD, P.B.)
     				1                               ,    // V2: should be _exchangerNbOfPassesPerShell; it is kept to keep the same results as V1 (SLD, P.B.)
-    				1                                 ); // V2: should be _exchangerNbOfShells;         it is kept to keep the same results as V1 (SLD, P.B.)
-
+    				1                               ,    // V2: should be _exchangerNbOfShells;         it is kept to keep the same results as V1 (SLD, P.B.)
+            htfCycle->get_saltDensity()     ,    //P.B. 2026-06
+            htfCycle->get_saltCost()       );    //P.B. 2026-06
     
   }
   catch ( const std::exception & e ) {
@@ -3667,7 +3673,8 @@ void Scenario::construct_minCost_TS ( bool & cnt_eval ) {
 			      _receiverTubesInsideDiam          ,
 			      _receiverTubesOutsideDiam         ,
 			      _receiverNbOfTubes                ,
-			      _minutesPerTimeIncrement            );
+			      _minutesPerTimeIncrement          ,
+            1  );                               //P.B. 2026-06 : Solar salt is used
   
     htfCycle->setStorage ( _storageStartupCondition               ,
 			   0.98*_centralReceiverOutletTemperature ,
@@ -3694,8 +3701,9 @@ void Scenario::construct_minCost_TS ( bool & cnt_eval ) {
     				1.0                             ,    // V2: should be _exchangerTubesLength;        it is kept to keep the same results as V1 (SLD, P.B.)
     				1                               ,    // V2: should be _exchangerNbOfTubes;          it is kept to keep the same results as V1 (SLD, P.B.)
     				1                               ,    // V2: should be _exchangerNbOfPassesPerShell; it is kept to keep the same results as V1 (SLD, P.B.)
-    				1                                 ); // V2: should be _exchangerNbOfShells;         it is kept to keep the same results as V1 (SLD, P.B.)
-    
+    				1                               ,    // V2: should be _exchangerNbOfShells;         it is kept to keep the same results as V1 (SLD, P.B.)
+            htfCycle->get_saltDensity()     ,    //P.B. 2026-06
+            htfCycle->get_saltCost()       );    //P.B. 2026-06
   }
   catch ( const std::exception & e ) {
     if ( htfCycle   ) delete htfCycle;
@@ -3778,7 +3786,8 @@ void Scenario::construct_maxEff_RE ( bool & cnt_eval ) {
 			      _receiverTubesInsideDiam          ,
 			      _receiverTubesOutsideDiam         ,
 			      _receiverNbOfTubes                ,
-			      _minutesPerTimeIncrement            );
+			      _minutesPerTimeIncrement          ,
+            1  );                               //P.B. 2026-06 : Solar salt is used
     htfCycle->initiateColdStorage();
 
     // investment cost model:
@@ -3802,8 +3811,9 @@ void Scenario::construct_maxEff_RE ( bool & cnt_eval ) {
     				1.0                             ,    // V2: should be _exchangerTubesLength;        it is kept to keep the same results as V1 (SLD, P.B.)
     				1                               ,    // V2: should be _exchangerNbOfTubes;          it is kept to keep the same results as V1 (SLD, P.B.)
     				1                               ,    // V2: should be _exchangerNbOfPassesPerShell; it is kept to keep the same results as V1 (SLD, P.B.)
-    				1                                 ); // V2: should be _exchangerNbOfShells;         it is kept to keep the same results as V1 (SLD, P.B.)
-    
+    				1                               ,    // V2: should be _exchangerNbOfShells;         it is kept to keep the same results as V1 (SLD, P.B.)
+            htfCycle->get_saltDensity()     ,    //P.B. 2026-06
+            htfCycle->get_saltCost()       );    //P.B. 2026-06    
   }
   catch ( const std::exception & e ) {
     if ( field      ) delete field;
@@ -3880,7 +3890,8 @@ void Scenario::construct_maxHF_minCost ( bool & cnt_eval ) {
 			      _receiverTubesInsideDiam          ,
 			      _receiverTubesOutsideDiam         ,
 			      _receiverNbOfTubes                ,
-			      _minutesPerTimeIncrement 	        );
+			      _minutesPerTimeIncrement 	        ,
+            1 );                                //P.B. 2026-06 : Solar salt is used
     htfCycle->initiateColdStorage();
     
     // investment cost model:
@@ -3904,8 +3915,9 @@ void Scenario::construct_maxHF_minCost ( bool & cnt_eval ) {
     				1.0                             ,    // V2: should be _exchangerTubesLength;        it is kept to keep the same results as V1 (SLD, P.B.)
     				1                               ,    // V2: should be _exchangerNbOfTubes;          it is kept to keep the same results as V1 (SLD, P.B.)
     				1                               ,    // V2: should be _exchangerNbOfPassesPerShell; it is kept to keep the same results as V1 (SLD, P.B.)
-    				1                                 ); // V2: should be _exchangerNbOfShells;         it is kept to keep the same results as V1 (SLD, P.B.)
-    
+    				1                               ,    // V2: should be _exchangerNbOfShells;         it is kept to keep the same results as V1 (SLD, P.B.)
+            htfCycle->get_saltDensity()     ,    //P.B. 2026-06
+            htfCycle->get_saltCost()       );    //P.B. 2026-06    
   }
   catch ( const std::exception & e ) {
     if ( field      ) delete field;
@@ -3991,7 +4003,8 @@ void Scenario::construct_maxNrg_minPar ( bool & cnt_eval ) {
 			      _exchangerNbOfBaffles             ,
 			      _exchangerNbOfTubes               ,
 			      _exchangerNbOfPassesPerShell      ,
-			      _exchangerNbOfShells                );
+			      _exchangerNbOfShells              ,
+            1  );                               //P.B. 2026-06 : Solar salt is used
 
     htfCycle->initiateColdStorage();
     
@@ -4016,8 +4029,9 @@ void Scenario::construct_maxNrg_minPar ( bool & cnt_eval ) {
     				1.0                             ,    // V2: should be _exchangerTubesLength;        it is kept to keep the same results as V1 (SLD, P.B.)
     				1                               ,    // V2: should be _exchangerNbOfTubes;          it is kept to keep the same results as V1 (SLD, P.B.)
     				1                               ,    // V2: should be _exchangerNbOfPassesPerShell; it is kept to keep the same results as V1 (SLD, P.B.)
-    				1                                 ); // V2: should be _exchangerNbOfShells;         it is kept to keep the same results as V1 (SLD, P.B.)
-    
+    				1                               ,    // V2: should be _exchangerNbOfShells;         it is kept to keep the same results as V1 (SLD, P.B.)
+            htfCycle->get_saltDensity()     ,    //P.B. 2026-06
+            htfCycle->get_saltCost()       );    //P.B. 2026-06    
   }
   catch ( const std::exception & e ) {
     if ( field      ) delete field;
@@ -4081,7 +4095,8 @@ void Scenario::construct_minCost_unconstrained ( bool & cnt_eval ) {
 			      _receiverTubesInsideDiam          ,
 			      _receiverTubesOutsideDiam         ,
 			      _receiverNbOfTubes                ,
-			      _minutesPerTimeIncrement            );
+			      _minutesPerTimeIncrement          ,
+            1  );                               //P.B. 2026-06 : Solar salt is used
   
     htfCycle->setStorage ( _storageStartupCondition               ,
 			   0.98*_centralReceiverOutletTemperature ,
@@ -4108,8 +4123,9 @@ void Scenario::construct_minCost_unconstrained ( bool & cnt_eval ) {
     				1.0                             ,    // V2: should be _exchangerTubesLength;        it is kept to keep the same results as V1 (SLD, P.B.)
     				1                               ,    // V2: should be _exchangerNbOfTubes;          it is kept to keep the same results as V1 (SLD, P.B.)
     				1                               ,    // V2: should be _exchangerNbOfPassesPerShell; it is kept to keep the same results as V1 (SLD, P.B.)
-    				1                                 ); // V2: should be _exchangerNbOfShells;         it is kept to keep the same results as V1 (SLD, P.B.)
-
+    				1                               ,    // V2: should be _exchangerNbOfShells;         it is kept to keep the same results as V1 (SLD, P.B.)
+            htfCycle->get_saltDensity()     ,    //P.B. 2026-06
+            htfCycle->get_saltCost()       );    //P.B. 2026-06
     
   }
   catch ( const std::exception & e ) {
@@ -4205,7 +4221,8 @@ void Scenario::construct_minCost_CH ( bool & cnt_eval ) {
 			      _exchangerNbOfBaffles             ,
 			      _exchangerNbOfTubes               ,
 			      _exchangerNbOfPassesPerShell      ,
-			      _exchangerNbOfShells                );
+			      _exchangerNbOfShells              ,
+            1 );                                //P.B. 2026-06 : Solar salt is used
     
     htfCycle->initiateColdStorage();
     
@@ -4230,7 +4247,9 @@ void Scenario::construct_minCost_CH ( bool & cnt_eval ) {
     				_exchangerTubesLength           ,  
     				_exchangerNbOfTubes             ,  
     				_exchangerNbOfPassesPerShell    ,  
-    				_exchangerNbOfShells            ); 
+    				_exchangerNbOfShells            ,
+            htfCycle->get_saltDensity()     ,    //P.B. 2026-06
+            htfCycle->get_saltCost()       );    //P.B. 2026-06 
   }
   catch ( const std::exception & e ) {
     if ( field      ) delete field;

@@ -70,7 +70,7 @@ public:
   double fComputeStorageLevel ( void );
 
   double fComputeStorageLevel ( double storedMass ) const {
-    return (storedMass / MS_DENSITY) / (PI*pow(0.5*_diameterOfStorage, 2.0));
+    return (storedMass / _inputHTF->get_density()) / (PI*pow(0.5*_diameterOfStorage, 2.0)); //P.B. 2026-06
   }
 
   double fInitialStorageMass ( int timeInterval ) const {

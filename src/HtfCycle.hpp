@@ -58,7 +58,7 @@ private:
 
 public:
 
-  HtfCycle ( double       receiverTemp            ,
+  HtfCycle ( double       receiverTemp        ,
 	     double       hot_storageHeight       ,
 	     double       cold_storageHeight      ,
 	     double       hot_storageDiameter     ,
@@ -73,9 +73,10 @@ public:
 	     double       receiverTubesDin        ,
 	     double       receiverTubesThickness  ,
 	     int          receiverNbTubes         ,
-	     int          timeInterval              );
+	     int          timeInterval			  ,
+		 int 	      saltID              );		//P.B. 2026-06 : Added parameter saltID
 
-  HtfCycle ( double       receiverTemp                ,
+  HtfCycle ( double       receiverTemp            ,
 	     double       hot_storageHeight           ,
 	     double       cold_storageHeight          ,
 	     double       hot_storageDiameter         ,
@@ -99,7 +100,8 @@ public:
 	     int          nbOfBaffles                 ,
 	     int          exchangerNbOfTubes          ,
 	     int          exchangerNbOfPassesPerShell ,
-	     int          exchangerNbOfShells           );
+	     int          exchangerNbOfShells		  ,
+		 int		  saltID           );           //P.B. 2026-06 : Added parameter saltID
 
   ~HtfCycle ( void ) {}
 
@@ -116,6 +118,12 @@ public:
   const	MoltenSalt     & get_steamGeneratorInlet   ( void ) const { return _steamGeneratorInlet;   }
   const	MoltenSalt     & get_steamGeneratorOutlet  ( void ) const { return _steamGeneratorOutlet;  }
   
+  //P.B. 2026-06
+  double get_saltDensity 	  (void) const {return _centralReceiverInlet.get_density();}
+  double get_saltHeatCapacity (void) const {return _centralReceiverInlet.get_heatCapacity();}
+  double get_saltMeltingPoint (void) const {return _centralReceiverInlet.get_meltingPoint();}
+  double get_saltCost		  (void) const {return _centralReceiverInlet.get_cost();}
+
   const	std::vector<double> & get_steamGenOutletMsRate ( void ) const { return _steamGenOutletMsRate; }
   const	std::vector<double> & get_steamGenOutletTemp   ( void ) const { return _steamGenOutletTemp;   }
   const	std::vector<double> & get_storageHeatV         ( void ) const { return _storageHeat;          }

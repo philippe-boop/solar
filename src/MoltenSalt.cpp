@@ -45,13 +45,27 @@
 #define d_B 2.5561
 #define d_C (-114.23)
 
-/*-------------------------------------------------------------------------------*/
-/*                                  constructor #1                               */
-/*-------------------------------------------------------------------------------*/
-MoltenSalt::MoltenSalt ( double temp, double pres, double masf ) :
-  _temperature(temp), _pressure(pres), _massFlow(masf) {
-  _enthalpy = HEAT_CAPACITY * _temperature;
-  fComputeViscosity();
+/*------------------------------------------------------------------------------------*/
+/*                                  constructor #1                                    */
+/*P.B. 2026-06 : Modified this constructor to allow different types of salt to be used*/
+/*------------------------------------------------------------------------------------*/
+MoltenSalt::MoltenSalt ( double temp, double pres, double masf, int id ) :
+  _temperature(temp), _pressure(pres), _massFlow(masf), _id(id) {
+    
+    //60% NaNO3 - 40% KNO3 (Solar salt)
+    if (id == 1) {
+      _meltingPoint     = 495.0;
+      _maxOperatingTemp = 873;
+      _density          = 1840.0;
+      _heatCapacity     = 1530.0;
+      _conductivity     = 1.16;
+      _cost             = 1.2;
+    }
+
+
+
+    _enthalpy = _heatCapacity * _temperature;
+    fComputeViscosity();
 }
 
 /*-------------------------------------------------------------------------------*/

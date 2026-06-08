@@ -26,21 +26,21 @@
 /*---------------------------------------------------------*/
 double ThermalStorage::fComputeStorageLevel ( void ) {
 /*---------------------------------------------------------*/
-  _heightOfVolumeStored = (_storedMass / MS_DENSITY) / (pow(_diameterOfStorage, 2.)*PI / 4.);
+  _heightOfVolumeStored = (_storedMass / _inputHTF->get_density()) / (pow(_diameterOfStorage, 2.)*PI / 4.); //P.B. 2026-06
   return _heightOfVolumeStored;
 }
 
 /*----------------------------------------------------------------------*/
 void ThermalStorage::set_storage ( double mass, double temperature ) {
 /*----------------------------------------------------------------------*/
-  double volume = mass / MS_DENSITY;
+  double volume = mass / _inputHTF->get_density(); //P.B. 2026-06
   _storedTemperature = temperature;
   if (volume <= PI*pow(_diameterOfStorage / 2.0, 2.0)*_heightOfStorage) {
     _storedMass = mass;
     _heightOfVolumeStored = volume / (PI*pow(_diameterOfStorage / 2.0, 2.0));
   }
   else {
-    _storedMass = PI*pow(_diameterOfStorage / 2.0, 2.0)*_heightOfStorage*MS_DENSITY;
+    _storedMass = PI*pow(_diameterOfStorage / 2.0, 2.0)*_heightOfStorage*_inputHTF->get_density(); //P.B. 2026-06
     _heightOfVolumeStored = _heightOfStorage;
   }
   _outputHTF->set_temperature(_storedTemperature);
@@ -51,7 +51,7 @@ void ThermalStorage::set_storage2 ( double level, double temperature ) {
 /*----------------------------------------------------------------------*/
   double area   = pow(_diameterOfStorage / 2.0, 2.0)*PI;
   double volume = area * level;
-  double mass   = volume * MS_DENSITY;
+  double mass   = volume * _inputHTF->get_density(); //P.B. 2026-06
   _storedMass           = mass;
   _storedTemperature    = temperature;
   _heightOfVolumeStored = level;
@@ -513,9 +513,9 @@ double ThermalStorage::fComputeStorageTemperature ( int timeInterval ) {
     (_storedMass + timeInSeconds * _inputHTF->get_massFlow());
 
   rateOfLosses = fComputeEnergyLosses(storedTemperature, _heightOfVolumeStored);
-  totalEnergy = HEAT_CAPACITY * _storedMass * _storedTemperature - timeInSeconds * rateOfLosses;
+  totalEnergy = _inputHTF->get_heatCapacity() * _storedMass * _storedTemperature - timeInSeconds * rateOfLosses; //P.B. 2026-06
 
-  _storedTemperature = totalEnergy / (HEAT_CAPACITY * _storedMass);
+  _storedTemperature = totalEnergy / (_inputHTF->get_heatCapacity() * _storedMass); //P.B. 2026-06
   
   //using current mass and temperature, add the new mass sent from the splitter and using design temperature
   //Compute new temperature
