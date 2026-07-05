@@ -193,7 +193,7 @@ void HtfCycle::fOperateCycle ( int    timeInSeconds       ,
   int steamGeneratorModel = _steamGenerator.get_exchangerModel();
   double Cp = get_saltHeatCapacity(); //P.B. 2026-06
   double meltingPoint = get_saltMeltingPoint(); // P.B. 2026-06
-  double minimumHotMass = 0.05*get_saltDensity()*_hotStorage.get_heightOfStorage() //P.B. 2026-06
+  double minimumHotMass = 0.05*computeSaltDensity(_hotStorage.get_storedTemperature())*_hotStorage.get_heightOfStorage() //P.B. 2026-06
     *PI*pow(_hotStorage.get_diameterOfStorage() / 2.0, 2.0);
 
   hotMassFlow_in = _centralReceiver.computeEnergyToFluid ( energyFromField );
@@ -413,7 +413,7 @@ void HtfCycle::fOperateCycle ( int    timeInSeconds       ,
     }
     else if (hotLevel_f > _hotStorage.get_heightOfStorage() && hotMassFlow_out == 0.0) {
       hotLevel_f = _hotStorage.get_heightOfStorage();
-      hotMass_f = get_saltDensity()*hotLevel_f * PI*pow(_hotStorage.get_diameterOfStorage(), 2.0) / 4.0; //P.B. 2026-06
+      hotMass_f = computeSaltDensity(_hotStorage.get_storedTemperature())*hotLevel_f * PI*pow(_hotStorage.get_diameterOfStorage(), 2.0) / 4.0; //P.B. 2026-06
       U_i = hotMass_f * hotTemp_i * Cp;
       Q_dot_avg = _hotStorage.fComputeEnergyLosses(hotTemp_i, hotLevel_f);
       U_f = U_i - timeInSeconds*Q_dot_avg;
@@ -434,7 +434,7 @@ void HtfCycle::fOperateCycle ( int    timeInSeconds       ,
     }
     else if (hotLevel_f > _hotStorage.get_heightOfStorage()) {
       hotLevel_f = _hotStorage.get_heightOfStorage();
-      hotMass_f = get_saltDensity()*hotLevel_f * PI*pow(_hotStorage.get_diameterOfStorage(), 2.0) / 4.0; //P.B. 2026-06
+      hotMass_f = computeSaltDensity(_hotStorage.get_storedTemperature())*hotLevel_f * PI*pow(_hotStorage.get_diameterOfStorage(), 2.0) / 4.0; //P.B. 2026-06
       hotTemp_f = hotTemp_in;
       hotMassFlow_in = hotMassFlow_out;
       
@@ -582,7 +582,7 @@ void HtfCycle::fOperateCycle ( int    timeInSeconds       ,
 
       if (hotLevel_f > _hotStorage.get_heightOfStorage()) {
 	hotLevel_f = _hotStorage.get_heightOfStorage();
-	hotMass_f = get_saltDensity()*hotLevel_f*PI*pow(_hotStorage.get_diameterOfStorage(), 2.0) / 4.0; //P.B. 2026-06
+	hotMass_f = computeSaltDensity(_hotStorage.get_storedTemperature())*hotLevel_f*PI*pow(_hotStorage.get_diameterOfStorage(), 2.0) / 4.0; //P.B. 2026-06
 
 	hotLevel_avg = hotLevel_f;
 	hotMass_avg = hotMass_f;
@@ -770,7 +770,7 @@ void HtfCycle::fOperateCycle ( int    timeInSeconds       ,
   }
   
   maxColdMass = _coldStorage.get_heightOfStorage() *
-    PI * pow(_coldStorage.get_diameterOfStorage()/2.0,2.0) * get_saltDensity(); //P.B. 2026-06
+    PI * pow(_coldStorage.get_diameterOfStorage()/2.0,2.0) * computeSaltDensity(_coldStorage.get_storedTemperature()); //P.B. 2026-06
   
   coldMass_f = maxColdMass - _hotStorage.get_storedMass();
   _coldStorage.set_storage(coldMass_f, coldTemp_f);
@@ -798,8 +798,8 @@ void HtfCycle::fOperateCycle ( int    timeInSeconds       ,
 void HtfCycle::initiateColdStorage ( void ) {
 /*--------------------------------------------*/
   double volume            = PI*pow(_coldStorage.get_diameterOfStorage() / 2.0, 2.0)*_coldStorage.get_heightOfStorage();
-  double storedMass        = volume * get_saltDensity(); //P.B. 2026-06
   double storedTemperature = _minColdStorageTemp;
+  double storedMass        = volume * computeSaltDensity(storedTemperature); //P.B. 2026-06
   _coldStorage.set_storage(storedMass, storedTemperature);
 }
 

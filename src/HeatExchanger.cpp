@@ -291,7 +291,7 @@ double HeatExchanger::fComputeRequiredMoltenSaltMassFlow ( double energyOutputRe
 
   C_r = C_min / C_max;
   //Determining coefficient outside the tubes
-  V_dot_ms = maximumFlow / _input->get_density(); //P.B. 2026-06
+  V_dot_ms = maximumFlow / _input->computeDensity(0.5*(T_in_ms + T_out_ms)); //P.B. 2026-06
   S_T = _tubesSpacing;
   S_D = S_T*sqrt(5) / 2.;
   shellCrossArea = _tubesLength*((_totalRows + 1.0) * S_T)/(_nbOfBaffles + 1.);
@@ -304,10 +304,10 @@ double HeatExchanger::fComputeRequiredMoltenSaltMassFlow ( double energyOutputRe
   else
     V_max = V*S_T / (S_T / _tubesDout);
   
-  visc_ms = MoltenSalt::fComputeViscosity(0.5*(T_in_ms + T_out_ms));
+  visc_ms = _input->computeViscosity(0.5*(T_in_ms + T_out_ms)); //P.B. 2026-06 : Method no longer static
 
-  Re_ms = _input->get_density()*V_max*_tubesDout / visc_ms; //P.B. 2026-06
-  Pr_ms = _input->get_heatCapacity() * visc_ms / _input->get_conductivity(); //P.B. 2026-06
+  Re_ms = _input->computeDensity(0.5*(T_in_ms + T_out_ms))*V_max*_tubesDout / visc_ms; //P.B. 2026-06
+  Pr_ms = _input->get_heatCapacity() * visc_ms / _input->computeConductivity(0.5*(T_in_ms + T_out_ms)); //P.B. 2026-06
   C1 = fComputeC1(S_T, _tubesDout);
   m = fComputeM(S_T, _tubesDout);
   
@@ -320,7 +320,7 @@ double HeatExchanger::fComputeRequiredMoltenSaltMassFlow ( double energyOutputRe
   else
     C2 = 1.0;
 
-  h_ms = Nus_ms*_input->get_conductivity() / _tubesDout; //P.B. 2026-06
+  h_ms = Nus_ms*_input->computeConductivity(0.5*(T_in_ms + T_out_ms)) / _tubesDout; //P.B. 2026-06
 
   //According to Incropera P.688, for a shell-tubes exchanger, NUT1
   //is assumed identical for every shell with NTU = n(NTU1)
@@ -356,7 +356,7 @@ double HeatExchanger::fComputeRequiredMoltenSaltMassFlow ( double energyOutputRe
       C_r = C_min / C_max;
 
       //Determining coefficient outside the tubes
-      V_dot_ms = m_dot_ms1 / _input->get_density(); //P.B. 2026-06
+      V_dot_ms = m_dot_ms1 / _input->computeDensity(0.5*(T_in_ms + T_out_ms)); //P.B. 2026-06
       S_T = _tubesSpacing;
       S_D = S_T*sqrt(5) / 2.;
       shellCrossArea = _tubesLength*((_totalRows + 1.0) * S_T)/(_nbOfBaffles + 1.0);
@@ -369,10 +369,10 @@ double HeatExchanger::fComputeRequiredMoltenSaltMassFlow ( double energyOutputRe
       else
 	V_max = V*S_T / (S_T / _tubesDout);
       
-      visc_ms = MoltenSalt::fComputeViscosity(0.5*(T_in_ms + T_out_ms));
+      visc_ms = _input->computeViscosity(0.5*(T_in_ms + T_out_ms)); //P.B. 2026-06 : Method no longer static
 
-      Re_ms = _input->get_density()*V_max*_tubesDout / visc_ms; //P.B. 2026-06
-      Pr_ms = _input->get_heatCapacity() * visc_ms / _input->get_conductivity(); //P.B. 2026-06
+      Re_ms = _input->computeDensity(0.5*(T_in_ms + T_out_ms))*V_max*_tubesDout / visc_ms; //P.B. 2026-06
+      Pr_ms = _input->get_heatCapacity() * visc_ms / _input->computeConductivity(0.5*(T_in_ms + T_out_ms)); //P.B. 2026-06
       C1 = fComputeC1(S_T, _tubesDout);
       m = fComputeM(S_T, _tubesDout);
 
@@ -385,7 +385,7 @@ double HeatExchanger::fComputeRequiredMoltenSaltMassFlow ( double energyOutputRe
       else
 	C2 = 1.0;
 
-      h_ms = Nus_ms*_input->get_conductivity() / _tubesDout; //P.B. 2026-06
+      h_ms = Nus_ms*_input->computeConductivity(0.5*(T_in_ms + T_out_ms)) / _tubesDout; //P.B. 2026-06
 
       //According to Incropera P.688, for a shell-tubes exchanger, NUT1
       //is assumed identical for every shell with NTU = n(NTU1)
@@ -547,10 +547,10 @@ double HeatExchanger::computePressureInShells ( void ) const {
   D_i    = _shellWidth;
   D_bun  = _bundle_EqDiameter;
   N_c    = _totalRows;
-  rho    = _input->get_density(); //P.B. 2026-06
   Tin_ms = _input->get_temperature();
   To_ms  = _output->get_temperature();
-  eta_ms = MoltenSalt::fComputeViscosity(0.5*(Tin_ms + To_ms));
+  rho    = _input->computeDensity(0.5*(Tin_ms + To_ms)); //P.B. 2026-06
+  eta_ms = _input->computeViscosity(0.5*(Tin_ms + To_ms)); //P.B. 2026-06 : Method no longer static
   H_baf  = _baffleCut * D_i;
   S_baf  = _baffleSpacing;
   eta_w  = WATER_300K_1ATM_VISCOSITY; //find average viscosity;

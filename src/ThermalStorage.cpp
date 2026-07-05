@@ -26,21 +26,21 @@
 /*---------------------------------------------------------*/
 double ThermalStorage::fComputeStorageLevel ( void ) {
 /*---------------------------------------------------------*/
-  _heightOfVolumeStored = (_storedMass / _inputHTF->get_density()) / (pow(_diameterOfStorage, 2.)*PI / 4.); //P.B. 2026-06
+  _heightOfVolumeStored = (_storedMass / _inputHTF->computeDensity(_inputHTF->get_temperature())) / (pow(_diameterOfStorage, 2.)*PI / 4.); //P.B. 2026-06
   return _heightOfVolumeStored;
 }
 
 /*----------------------------------------------------------------------*/
 void ThermalStorage::set_storage ( double mass, double temperature ) {
 /*----------------------------------------------------------------------*/
-  double volume = mass / _inputHTF->get_density(); //P.B. 2026-06
+  double volume = mass / _inputHTF->computeDensity(temperature); //P.B. 2026-06
   _storedTemperature = temperature;
   if (volume <= PI*pow(_diameterOfStorage / 2.0, 2.0)*_heightOfStorage) {
     _storedMass = mass;
     _heightOfVolumeStored = volume / (PI*pow(_diameterOfStorage / 2.0, 2.0));
   }
   else {
-    _storedMass = PI*pow(_diameterOfStorage / 2.0, 2.0)*_heightOfStorage*_inputHTF->get_density(); //P.B. 2026-06
+    _storedMass = PI*pow(_diameterOfStorage / 2.0, 2.0)*_heightOfStorage*_inputHTF->computeDensity(temperature); //P.B. 2026-06
     _heightOfVolumeStored = _heightOfStorage;
   }
   _outputHTF->set_temperature(_storedTemperature);
@@ -51,7 +51,7 @@ void ThermalStorage::set_storage2 ( double level, double temperature ) {
 /*----------------------------------------------------------------------*/
   double area   = pow(_diameterOfStorage / 2.0, 2.0)*PI;
   double volume = area * level;
-  double mass   = volume * _inputHTF->get_density(); //P.B. 2026-06
+  double mass   = volume * _inputHTF->computeDensity(temperature); //P.B. 2026-06
   _storedMass           = mass;
   _storedTemperature    = temperature;
   _heightOfVolumeStored = level;

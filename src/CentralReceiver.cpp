@@ -61,11 +61,6 @@ CentralReceiver::CentralReceiver ( MoltenSalt* input               ,
 /*----------------------------------------------------------------------------*/
 double CentralReceiver::computeEnergyToFluid ( double Q_in ) {
 
-  //P.B. 2026-06 : These parameters now depend on the type of molten salt
-  double saltHeatCapacity = _input->get_heatCapacity();
-  double saltDensity      = _input->get_density();
-  double saltConductivity = _input->get_conductivity();
-
   // the procedure will go through if energy is inputed from the field
   if (Q_in <= 0.0){ 
     _losses.push_back(0.0);
@@ -81,7 +76,13 @@ double CentralReceiver::computeEnergyToFluid ( double Q_in ) {
   double m_dot_1 = 0.;
   double T_ms = (To + Ti) / 2.;
   double Del_T;
-  double mu = MoltenSalt::fComputeViscosity(T_ms);
+
+  //P.B. 2026-06 : These parameters now depend on the type of molten salt and on its temperature
+  double saltHeatCapacity = _input->get_heatCapacity();
+  double saltDensity      = _input->computeDensity(T_ms);
+  double saltConductivity = _input->computeConductivity(T_ms);
+  double mu               = _input->computeViscosity(T_ms); //P.B. 2026-06 : Method no longer static
+
   double m_dot_2, h_ms, T_re_sur,Nus, Re, Pr, V, Q_loss, f;
   double Q_cond, Q_em, Q_ref, Q_tot1, Q_tot2, Q_abs;
   int count  = 0;
@@ -160,7 +161,7 @@ double CentralReceiver::computeEnergyToFluid ( double Q_in ) {
       }
       
       eff     = 1 - (Q_loss / Q_in);
-      m_dot_2 = eff * Q_in / (saltHeatCapacity * (To - Ti));
+      m_dot_2 = eff * Q_in / (saltHeatCapacity * (To - Ti)); //P.B. 2026
       
       ++count;
     }
@@ -338,8 +339,8 @@ double CentralReceiver::computePressureInTubes ( void ) const {
   
   
   double A_tubes = PI * pow ( _tubesInsideDiameter / 2.0, 2.0 ); //m^2
-  double V       = _input->get_massFlow() / (_input->get_density() * A_tubes * _numberOfTubes); //[m/s] P.B. 2026-06
-  double mu      = MoltenSalt::fComputeViscosity(_input->get_temperature());
+  double V       = _input->get_massFlow() / (_input->computeDensity(_input->get_temperature()) * A_tubes * _numberOfTubes); //[m/s] P.B. 2026-06
+  double mu      = _input->computeViscosity(_input->get_temperature()); //P.B. 2026-06 : Method no longer static
   double Re      = V * _tubesInsideDiameter / mu;
   double Lambda;
 	
@@ -353,7 +354,7 @@ double CentralReceiver::computePressureInTubes ( void ) const {
     else {      
       throw std::out_of_range ( "Reynolds number out of range" );
     }
-    return Lambda * _apertureHeight * _numberOfPasses * _input->get_density() * V*V / (8.0 * A_tubes / (PI*_tubesInsideDiameter)); //P.B. 2026-06
+    return Lambda * _apertureHeight * _numberOfPasses * _input->computeDensity(_input->get_temperature()) * V*V / (8.0 * A_tubes / (PI*_tubesInsideDiameter)); //P.B. 2026-06
   }
   return 0.0;
 }

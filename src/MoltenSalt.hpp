@@ -32,50 +32,40 @@
 class MoltenSalt {
 
 private:
-  
+
+  //P.B. 2026-06 : Attribute _viscosity is not necessary since it is only computed at specific temperatures when needed. Attribute _enthalpy is not used either.
   double _temperature; // in K
-  double _enthalpy;    // in J/kg*K
   double _pressure;    // in kPa
   double _massFlow;    // in kg/s
-  double _viscosity;   // in kg/ms
 
-  //P.B. 2026-06
-  int _id;
+  int    _id;
   double _meltingPoint;     // in K
   double _maxOperatingTemp; // in K
-  double _density;          // in kg*m^-3
+  double _costPerKg;        // in USD/kg
   double _heatCapacity;     // in J/(kg*K)
-  double _conductivity;     // in W/(m*K)
-  double _cost;             // in USD/kg
 
 public:
   
   MoltenSalt ( double, double, double, int ); //P.B. 2026-06 : Modified this contructor 
-  MoltenSalt ( double, double );
-  MoltenSalt ( MoltenSalt& );
 
-  double get_temperature ( void ) const { return _temperature; }
-  double get_enthalpy    ( void ) const{ return _enthalpy; }
+  double get_temperature ( void ) const{ return _temperature; }
   double get_pressure    ( void ) const{ return _pressure; }
   double get_massFlow    ( void ) const{ return _massFlow; }
-  double get_viscosity   ( void ) const { return _viscosity; }
 
   //P.B. 2026-06
   double get_meltingPoint     ( void ) const{ return _meltingPoint; }
   double get_maxOperatingTemp ( void ) const{ return _maxOperatingTemp;}
-  double get_density          ( void ) const{ return _density; }
-  double get_heatCapacity     ( void ) const{ return _heatCapacity; }
-  double get_conductivity     ( void ) const{ return _conductivity; }
-  double get_cost             ( void ) const{ return _cost;}
+  double get_cost             ( void ) const{ return _costPerKg;}
+  double get_heatCapacity     ( void ) const{ return _heatCapacity;}
 
   void set_pressure      ( double pres) { _pressure = pres; }
   void set_massFlow      ( double masf) { _massFlow = masf; }
-  void set_temperature   ( double );
-  void set_enthalpy      ( double );
-  void fComputeViscosity ( void   );
-  void fModifyEnergy     ( double );
+  void set_temperature   ( double T   ) {_temperature = T;}
 
-  static double fComputeViscosity ( double );
+  double computeViscosity    ( double ); // Pa*s
+  double computeHeatCapacity ( double ); // J/(kg*K)
+  double computeDensity      ( double ); // kg/m^3
+  double computeConductivity ( double ); // W/(m*K)
 };
 
 #endif

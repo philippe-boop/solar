@@ -37,7 +37,7 @@ class ThermalStorage {
 private:
   double            _storedMass;
   double            _storedTemperature;
-  const MoltenSalt* _inputHTF;
+  MoltenSalt*       _inputHTF; //P.B. 2026 : Attribute no longer constant
   MoltenSalt      * _outputHTF;
 
   //Dimensions parameters in meters
@@ -50,7 +50,7 @@ private:
 
 public:
 
-  ThermalStorage ( const MoltenSalt* input, MoltenSalt* output, double height, double diameter, double thickness ) :
+  ThermalStorage ( MoltenSalt* input, MoltenSalt* output, double height, double diameter, double thickness ) : //P.B. 2026 : Attribute _inputHTF no longer constant
     _storedMass            ( 0.0       ) ,
     _storedTemperature     ( 0.0       ) ,
     _inputHTF              ( input     ) ,
@@ -70,7 +70,7 @@ public:
   double fComputeStorageLevel ( void );
 
   double fComputeStorageLevel ( double storedMass ) const {
-    return (storedMass / _inputHTF->get_density()) / (PI*pow(0.5*_diameterOfStorage, 2.0)); //P.B. 2026-06
+    return (storedMass / _inputHTF->computeDensity(_inputHTF->get_temperature())) / (PI*pow(0.5*_diameterOfStorage, 2.0)); //P.B. 2026-06
   }
 
   double fInitialStorageMass ( int timeInterval ) const {
