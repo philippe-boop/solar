@@ -101,6 +101,8 @@ MoltenSalt::MoltenSalt ( double temp, double pres, double masf, int id ) :
       _costPerKg        = 1.0; //Not found yet
       _heatCapacity     = 1571.0; //Evaluated at 350.3 Celsius
       break;
+      
+      default: throw std::invalid_argument("Invalid molten salt ID");
     }
 
 }
@@ -141,6 +143,8 @@ double MoltenSalt::computeViscosity ( double T ) {
 
     //KNO3–NaNO3–LiNO3–Ca(NO3)2*4H2O 6:1:2:2
     case 5: return 0.6492 * std::exp( (7450.0) / (R*T)) / 1000.0;
+    
+    default: throw std::invalid_argument("Invalid molten salt ID");
   }
 }
 
@@ -162,6 +166,8 @@ double MoltenSalt::computeDensity      ( double T) {
 
     //KNO3–NaNO3–LiNO3–Ca(NO3)2*4H2O 6:1:2:2
     case 5: return 1000.0 * (2.038 - 5.679e-4*(T - 273.15));
+
+    default: throw std::invalid_argument("Invalid molten salt ID");
   }
 }
 
@@ -183,5 +189,7 @@ double MoltenSalt::computeConductivity ( double T) {
 
     //KNO3–NaNO3–LiNO3–Ca(NO3)2*4H2O 6:1:2:2
     case 5: return 0.53;
+
+    default: throw std::invalid_argument("Invalid molten salt ID");
   }
 }

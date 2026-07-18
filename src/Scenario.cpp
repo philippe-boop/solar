@@ -71,6 +71,7 @@ Scenario::Scenario ( const std::string & problem , double fidelity ) :
   _receiverInsulThickness           ( 0.0     ) ,
   _receiverTubesInsideDiam          ( 0.0     ) ,
   _receiverTubesOutsideDiam         ( 0.0     ) ,
+  _typeOfSalt                       ( 0       ) , //P.B. 2026
   _exchangerTubesSpacing            ( 0.0     ) ,
   _exchangerTubesLength             ( 0.0     ) ,
   _exchangerTubesDin                ( 0.0     ) ,
@@ -82,7 +83,7 @@ Scenario::Scenario ( const std::string & problem , double fidelity ) :
   _exchangerNbOfPassesPerShell      ( 0       ) ,
   _typeOfTurbine                    ( 0       ) ,
   _powerplant                       ( NULL    ) ,
-  _minReceiverOutletTemp            ( 0.0     )   {
+  _minReceiverOutletTemp            ( 0.0     )    {
 
   // check fidelity:
   // ---------------

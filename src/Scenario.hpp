@@ -103,7 +103,8 @@ private:
   double _receiverInsulThickness;           // m
   double _receiverTubesInsideDiam;          // m
   double _receiverTubesOutsideDiam;         // m
-  
+  int    _typeOfSalt;                       // P.B. : Necessary for constructing the HTFCycle
+
   // Steam generator:
   double _exchangerTubesSpacing; // m
   double _exchangerTubesLength;  // m

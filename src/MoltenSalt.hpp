@@ -24,6 +24,7 @@
 #ifndef __MOLTEN_SALT_H__
 #define __MOLTEN_SALT_H__
 
+#include "Global.hpp"
 #include "Constants.hpp"
 #include <cmath>
 
