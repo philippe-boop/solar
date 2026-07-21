@@ -612,6 +612,7 @@ void Evaluator::display_outputs ( void ) const {
   else if ( pb_id == "MINCOST_TS" )
     _out << std::setprecision(12) << _outputs[0] << " "
 	 << _outputs[1] << " "
+   << std::setprecision(11) //P.B. 2026 : reduced precision
 	 << _outputs[2] << " "
 	 << std::setprecision( 8) << _outputs[3] << " "
 	 << std::setprecision( 8) << _outputs[4] << " "
@@ -627,7 +628,7 @@ void Evaluator::display_outputs ( void ) const {
 	 << _outputs[3] << " "
 	 << _outputs[4] << " "
 	 << _outputs[5] << " "
-	 << std::setprecision(10) << _outputs[6]
+	 << std::setprecision(6) << _outputs[6] //P.B. 2026 : reduced precision
 	 << std::setprecision(12);
   
   // solar 8:
@@ -648,7 +649,7 @@ void Evaluator::display_outputs ( void ) const {
   // solar 9:
   else if ( pb_id == "MAXNRG_MINPAR" )
     _out << std::setprecision(12) << _outputs[ 0] << " "
-	 << std::setprecision(10) << _outputs[ 1] << " " // New in Version 0.4.2
+	 << std::setprecision(9) << _outputs[ 1] << " " // New in Version 0.4.2 //P.B. 2026 : reduced precision
 	 << std::setprecision(12) << _outputs[ 2] << " "
 	 << _outputs[ 3] << " "
 	 << _outputs[ 4] << " "
