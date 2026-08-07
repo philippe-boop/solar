@@ -968,27 +968,27 @@ void Scenario::init_minCost_CH ( double fidelity ) {
  
   // Demand profile : 1, from 3 pm to 9 pm
   // Maximum demand : 25 MW
-  // Latitude : 35 deg
+  // Latitude : 30 deg
   // Day : 1
   // Duration : 24 hours
-  // maximum field surface of 200 hectares
+  // maximum field surface of 400 hectares
 
   // Scenario parameters:
   _model_type           = 2; // whole plant
   _heliostatsFieldModel = 1;
   _exchangerModel       = 2;
   
-  _latitude                = 35.0;
+  _latitude                = 30.0;
   _day                     = 1;
   _demandProfile           = 1;
   _tStart                  = 900;  // 15x60
   _tEnd                    = 1260; // 21x60
-  _maximumPowerDemand      = 25e6;
+  _maximumPowerDemand      = 20e6;
   _storageStartupCondition = 50;
   _minutesPerTimeIncrement = 60;
 
   _fixedPointsPrecision   = 0.001;
-  _cFieldSurface          = 2000000; // 200 hectares
+  _cFieldSurface          = 5000000; // 500 hectares
   _cDemandComplianceRatio = 100;
   _cParasitics            = 0.18;
   
@@ -1009,11 +1009,12 @@ bool Scenario::set_x_minCost_CH ( const double * x ) {
   // -------------------------
   if ( !is_int(x[ 5]) ||
        !is_int(x[17]) ||
-       !is_int(x[26]) ||
+       !is_int(x[21]) ||
        !is_int(x[27]) ||
        !is_int(x[28]) ||
        !is_int(x[29]) ||
-       !is_int(x[30])    )
+       !is_int(x[30]) ||
+       !is_int(x[31])    )
     throw std::invalid_argument ( "Problem with input: One of the discrete variables has a non-integer value" );
  
   // assign variables:
@@ -1043,18 +1044,19 @@ bool Scenario::set_x_minCost_CH ( const double * x ) {
   _receiverInsulThickness           = x[18];
   _receiverTubesInsideDiam          = x[19];
   _receiverTubesOutsideDiam         = x[20];
-  _exchangerTubesSpacing            = x[21];
-  _exchangerTubesLength             = x[22];
-  _exchangerTubesDin                = x[23];
-  _exchangerTubesDout               = x[24];
-  _exchangerBaffleCut               = x[25];
-  _exchangerNbOfBaffles             = myround(x[26]);
-  _exchangerNbOfTubes               = myround(x[27]);
-  _exchangerNbOfShells              = myround(x[28]);
-  _exchangerNbOfPassesPerShell      = myround(x[29]);
+  _typeOfSalt                       = x[21];
+  _exchangerTubesSpacing            = x[22];
+  _exchangerTubesLength             = x[23];
+  _exchangerTubesDin                = x[24];
+  _exchangerTubesDout               = x[25];
+  _exchangerBaffleCut               = x[26];
+  _exchangerNbOfBaffles             = myround(x[27]);
+  _exchangerNbOfTubes               = myround(x[28]);
+  _exchangerNbOfShells              = myround(x[29]);
+  _exchangerNbOfPassesPerShell      = myround(x[30]);
 
   // Powerblock:
-  if ( !set_typeOfTurbine ( myround(x[30]) ) )
+  if ( !set_typeOfTurbine ( myround(x[31]) ) )
     throw std::invalid_argument ( "Problem with input: Type of turbine is not in {1, 2, ..., 8}" );
 
   // check bounds:
@@ -2064,27 +2066,30 @@ bool Scenario::simulate_minCost_CH ( double fidelity, double * outputs , bool & 
   //  x8: _minimumDistanceToTower
   //  x9: _maximumDistanceToTower
   // x10: _centralReceiverOutletTemperature
-  // x11: _hotStorageHeight
-  // x12: _hotStorageDiameter
-  // x13: _hotStorageInsulThickness
-  // x14: _coldStorageInsulThickness
-  // x15: _coldMoltenSaltMinTemperature
-  // x16: _receiverNbOfTubes (int)
-  // x17: _receiverInsulThickness
-  // x18: _receiverTubesInsideDiam
-  // x19: _receiverTubesOutsideDiam
-  // x20: _exchangerTubesSpacing
-  // x21: _exchangerTubesLength
-  // x22: _exchangerTubesDin
-  // x23: _exchangerTubesDout
-  // x24: _exchangerBaffleCut
-  // x25: _exchangerNbOfBaffles (int)
-  // x26: _exchangerNbOfTubes (int)
-  // x27: _exchangerNbOfShells (int)
-  // x28: _exchangerNbOfPassesPerShell (int)
-  // x29: _typeOfTurbine (int)
-  // x30: _coldStorageHeight
-  // x31: _coldStorageDiameter
+  // x11: _coldStorageHeight  
+  // x12: _hotStorageHeight
+  // x13: _hotStorageDiameter
+  // x14: _hotStorageInsulThickness
+  // x15: _coldStorageDiameter  
+  // x16: _coldStorageInsulThickness
+  // x17: _coldMoltenSaltMinTemperature
+  // x18: _receiverNbOfTubes (int)
+  // x19: _receiverInsulThickness
+  // x20: _receiverTubesInsideDiam
+  // x21: _receiverTubesOutsideDiam
+  // x22: _typeOfSalt
+  // x23: _exchangerTubesSpacing
+  // x24: _exchangerTubesLength
+  // x25: _exchangerTubesDin
+  // x26: _exchangerTubesDout
+  // x27: _exchangerBaffleCut
+  // x28: _exchangerNbOfBaffles (int)
+  // x29: _exchangerNbOfTubes (int)
+  // x30: _exchangerNbOfShells (int)
+  // x31: _exchangerNbOfPassesPerShell (int)
+  // x32: _typeOfTurbine (int)
+
+
   
   for ( int i = 0 ; i < 17 ; ++i )
     outputs[i] = 1e20;
@@ -2138,9 +2143,9 @@ bool Scenario::simulate_minCost_CH ( double fidelity, double * outputs , bool & 
       outputs[6] = _powerplant->get_maximumPressureInReceiver() - _powerplant->get_yieldPressureInReceiver();
 
       // molten Salt temperature does not drop below the melting point: c7, c8, and c9:
-      outputs[7] = MELTING_POINT - _powerplant->get_minHotStorageTemp();
-      outputs[8] = MELTING_POINT - _powerplant->get_minColdStorageTemp();
-      outputs[9] = MELTING_POINT - _powerplant->get_minSteamGenTemp();
+      outputs[7] = _powerplant->get_saltMeltingPoint() - _powerplant->get_minHotStorageTemp();
+      outputs[8] = _powerplant->get_saltMeltingPoint() - _powerplant->get_minColdStorageTemp();
+      outputs[9] = _powerplant->get_saltMeltingPoint() - _powerplant->get_minSteamGenTemp();
     
       // c10: Receiver tubes Din < Dout: A priori: x18 <= x19:
 
@@ -2163,7 +2168,19 @@ bool Scenario::simulate_minCost_CH ( double fidelity, double * outputs , bool & 
 
       // c16: Pressure in steam generator tubes does not exceed yield pressure:
       outputs[16] = _powerplant->get_maximumPressureInExchanger() - _powerplant->get_yieldPressureInExchanger();
-    }
+      
+      // c17: Hot storage is big enough to compensate for the decrease in density:
+      outputs[17] = (_powerplant->get_totalSaltMass() / _powerplant->compute_saltDensity(_centralReceiverOutletTemperature))
+                  - (PI*_hotStorageHeight*pow(_hotStorageDiameter/2.0, 2.0));
+    
+      // c18: Receiver outlet temperature does not exceed salt's max operating temperature
+      outputs[18] = _centralReceiverOutletTemperature - _powerplant->get_saltMaxOperatingTemp();
+
+      // c19: steam generator outlet temperature is higher than salt's melting point
+      outputs[19] = _powerplant->get_saltMeltingPoint() - _coldMoltenSaltMinTemperature;
+
+      // c20: A priori: x17 <= x10 
+      }
   }
   catch ( const std::exception & e ) {   
     throw Simulation_Interruption ( "Simulation could not go through: " + std::string(e.what()) );
@@ -3008,7 +3025,7 @@ bool Scenario::check_bounds_minCost_CH ( void ) const {
   if ( _maximumDistanceToTower < 1 || _maximumDistanceToTower > 20 )
     return false;
   
-  if ( _centralReceiverOutletTemperature > 995 )
+  if ( _centralReceiverOutletTemperature > 1073.15 || _centralReceiverOutletTemperature < 600.0)
     return false;
  
   if ( _hotStorageHeight < 1 || _hotStorageHeight > 50 )
@@ -3023,7 +3040,7 @@ bool Scenario::check_bounds_minCost_CH ( void ) const {
   if ( _coldStorageInsulThickness < 0.01 || _coldStorageInsulThickness > 5 )
     return false;
   
-  if ( _coldMoltenSaltMinTemperature < MELTING_POINT || _coldMoltenSaltMinTemperature > 650 )
+  if ( _coldMoltenSaltMinTemperature < 361.75 || _coldMoltenSaltMinTemperature > 900.0 )
     return false;
   
   if ( _receiverNbOfTubes < 1 || _receiverNbOfTubes > 7853 )
@@ -3036,6 +3053,9 @@ bool Scenario::check_bounds_minCost_CH ( void ) const {
     return false;
 
   if ( _receiverTubesOutsideDiam < 0.006 || _receiverTubesOutsideDiam > 0.1 )
+    return false;
+
+  if ( _typeOfSalt < 1 || _typeOfSalt > 5)
     return false;
 
   if ( _exchangerTubesSpacing > 0.3 )
@@ -3108,12 +3128,15 @@ bool Scenario::check_apriori_constraints_minCost_CH ( double * outputs ) const {
   // c15: A priori: x22 <= x23:
   outputs[15] = _exchangerTubesDin  - _exchangerTubesDout;
 
+  // c20: A priori: x17 <= x10 
+  outputs[20] = _coldMoltenSaltMinTemperature - _centralReceiverOutletTemperature;
+
   // hidden constraint:
   if ( _centralReceiverOutletTemperature < _minReceiverOutletTemp )
     return false;
   
   if ( outputs[ 1] > 0.0 || outputs[ 3] > 0.0 || outputs[ 4] > 0.0 || outputs[10] > 0.0 ||
-       outputs[11] > 0.0 || outputs[14] > 0.0 || outputs[15] > 0.0 )
+       outputs[11] > 0.0 || outputs[14] > 0.0 || outputs[15] > 0.0 || outputs[20] > 0.0)
     return false;
 
    return true;
@@ -3273,7 +3296,7 @@ void Scenario::construct_minSurf_H1 ( bool & cnt_eval ) {
     				1                               ,    // V2: should be _exchangerNbOfTubes;          it is kept to keep the same results as V1 (SLD, P.B.)
     				1                               ,    // V2: should be _exchangerNbOfPassesPerShell; it is kept to keep the same results as V1 (SLD, P.B.)
     				1                               ,    // V2: should be _exchangerNbOfShells;         it is kept to keep the same results as V1 (SLD, P.B.)
-            htfCycle->get_maxSaltDensity()  ,    //P.B. 2026-06
+            htfCycle->get_minColdDensity()  ,    //P.B. 2026-06
             htfCycle->get_saltCost()       );    //P.B. 2026-06
           }
   catch ( const std::exception & e ) {
@@ -3375,7 +3398,7 @@ void Scenario::construct_minCost_C1 ( bool & cnt_eval ) {
     				1                               ,    // V2: should be _exchangerNbOfTubes;          it is kept to keep the same results as V1 (SLD, P.B.)
     				1                               ,    // V2: should be _exchangerNbOfPassesPerShell; it is kept to keep the same results as V1 (SLD, P.B.)
     				1                               , // V2: should be _exchangerNbOfShells;         it is kept to keep the same results as V1 (SLD, P.B.)
-            htfCycle->get_maxSaltDensity()  ,    //P.B. 2026-06
+            htfCycle->get_minColdDensity()  ,    //P.B. 2026-06
             htfCycle->get_saltCost()       );    //P.B. 2026-06
   }
   catch ( const std::exception & e ) {
@@ -3488,7 +3511,7 @@ void Scenario::construct_minCost_C2 ( bool & cnt_eval ) {
     				1                               ,    // V2: should be _exchangerNbOfTubes;          it is kept to keep the same results as V1 (SLD, P.B.)
     				1                               ,    // V2: should be _exchangerNbOfPassesPerShell; it is kept to keep the same results as V1 (SLD, P.B.)
     				1                               ,    // V2: should be _exchangerNbOfShells;         it is kept to keep the same results as V1 (SLD, P.B.)
-            htfCycle->get_maxSaltDensity()  ,    //P.B. 2026-06
+            htfCycle->get_minColdDensity()  ,    //P.B. 2026-06
             htfCycle->get_saltCost()       );    //P.B. 2026-06
     
   }
@@ -3602,7 +3625,7 @@ void Scenario::construct_maxComp_HTF1 ( bool & cnt_eval ) {
     				1                               ,    // V2: should be _exchangerNbOfTubes;          it is kept to keep the same results as V1 (SLD, P.B.)
     				1                               ,    // V2: should be _exchangerNbOfPassesPerShell; it is kept to keep the same results as V1 (SLD, P.B.)
     				1                               ,    // V2: should be _exchangerNbOfShells;         it is kept to keep the same results as V1 (SLD, P.B.)
-            htfCycle->get_maxSaltDensity()  ,    //P.B. 2026-06
+            htfCycle->get_minColdDensity()  ,    //P.B. 2026-06
             htfCycle->get_saltCost()       );    //P.B. 2026-06
     
   }
@@ -3703,7 +3726,7 @@ void Scenario::construct_minCost_TS ( bool & cnt_eval ) {
     				1                               ,    // V2: should be _exchangerNbOfTubes;          it is kept to keep the same results as V1 (SLD, P.B.)
     				1                               ,    // V2: should be _exchangerNbOfPassesPerShell; it is kept to keep the same results as V1 (SLD, P.B.)
     				1                               ,    // V2: should be _exchangerNbOfShells;         it is kept to keep the same results as V1 (SLD, P.B.)
-            htfCycle->get_maxSaltDensity()  ,    //P.B. 2026-06
+            htfCycle->get_minColdDensity()  ,    //P.B. 2026-06
             htfCycle->get_saltCost()       );    //P.B. 2026-06
   }
   catch ( const std::exception & e ) {
@@ -3813,7 +3836,7 @@ void Scenario::construct_maxEff_RE ( bool & cnt_eval ) {
     				1                               ,    // V2: should be _exchangerNbOfTubes;          it is kept to keep the same results as V1 (SLD, P.B.)
     				1                               ,    // V2: should be _exchangerNbOfPassesPerShell; it is kept to keep the same results as V1 (SLD, P.B.)
     				1                               ,    // V2: should be _exchangerNbOfShells;         it is kept to keep the same results as V1 (SLD, P.B.)
-            htfCycle->get_maxSaltDensity()  ,    //P.B. 2026-06
+            htfCycle->get_minColdDensity()  ,    //P.B. 2026-06
             htfCycle->get_saltCost()       );    //P.B. 2026-06    
   }
   catch ( const std::exception & e ) {
@@ -3917,7 +3940,7 @@ void Scenario::construct_maxHF_minCost ( bool & cnt_eval ) {
     				1                               ,    // V2: should be _exchangerNbOfTubes;          it is kept to keep the same results as V1 (SLD, P.B.)
     				1                               ,    // V2: should be _exchangerNbOfPassesPerShell; it is kept to keep the same results as V1 (SLD, P.B.)
     				1                               ,    // V2: should be _exchangerNbOfShells;         it is kept to keep the same results as V1 (SLD, P.B.)
-            htfCycle->get_maxSaltDensity()  ,    //P.B. 2026-06
+            htfCycle->get_minColdDensity()  ,    //P.B. 2026-06
             htfCycle->get_saltCost()       );    //P.B. 2026-06    
   }
   catch ( const std::exception & e ) {
@@ -4031,7 +4054,7 @@ void Scenario::construct_maxNrg_minPar ( bool & cnt_eval ) {
     				1                               ,    // V2: should be _exchangerNbOfTubes;          it is kept to keep the same results as V1 (SLD, P.B.)
     				1                               ,    // V2: should be _exchangerNbOfPassesPerShell; it is kept to keep the same results as V1 (SLD, P.B.)
     				1                               ,    // V2: should be _exchangerNbOfShells;         it is kept to keep the same results as V1 (SLD, P.B.)
-            htfCycle->get_maxSaltDensity()  ,    //P.B. 2026-06
+            htfCycle->get_minColdDensity()  ,    //P.B. 2026-06
             htfCycle->get_saltCost()       );    //P.B. 2026-06    
   }
   catch ( const std::exception & e ) {
@@ -4125,7 +4148,7 @@ void Scenario::construct_minCost_unconstrained ( bool & cnt_eval ) {
     				1                               ,    // V2: should be _exchangerNbOfTubes;          it is kept to keep the same results as V1 (SLD, P.B.)
     				1                               ,    // V2: should be _exchangerNbOfPassesPerShell; it is kept to keep the same results as V1 (SLD, P.B.)
     				1                               ,    // V2: should be _exchangerNbOfShells;         it is kept to keep the same results as V1 (SLD, P.B.)
-            htfCycle->get_maxSaltDensity()  ,    //P.B. 2026-06
+            htfCycle->get_minColdDensity()  ,    //P.B. 2026-06
             htfCycle->get_saltCost()       );    //P.B. 2026-06
     
   }
@@ -4223,7 +4246,7 @@ void Scenario::construct_minCost_CH ( bool & cnt_eval ) {
 			      _exchangerNbOfTubes               ,
 			      _exchangerNbOfPassesPerShell      ,
 			      _exchangerNbOfShells              ,
-            0 );                                //P.B. 2026-06 : Solar salt is used
+            _typeOfSalt );
     
     htfCycle->initiateColdStorage();
     
@@ -4249,7 +4272,7 @@ void Scenario::construct_minCost_CH ( bool & cnt_eval ) {
     				_exchangerNbOfTubes             ,  
     				_exchangerNbOfPassesPerShell    ,  
     				_exchangerNbOfShells            ,
-            htfCycle->get_maxSaltDensity()  ,    //P.B. 2026-06
+            htfCycle->get_minColdDensity()  ,    //P.B. 2026-06
             htfCycle->get_saltCost()       );    //P.B. 2026-06 
   }
   catch ( const std::exception & e ) {

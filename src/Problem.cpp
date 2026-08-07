@@ -103,7 +103,7 @@ void create_problems ( std::vector<Problem> & problems ) {
   problems.push_back ( Problem ( "MAXHF_MINCOST"        , "heliostat field performance and cost" ,  8, 2, 13,  9 ) ); // #8
   problems.push_back ( Problem ( "MAXNRG_MINPAR"        , "power and losses"                     ,  9, 2, 29, 17 ) ); // #9
   problems.push_back ( Problem ( "MINCOST_UNCONSTRAINED", "cost of storage + penalties"          , 10, 1,  5,  0 ) ); // #10
-  problems.push_back ( Problem ( "MINCOST_CH"           , "total investment cost"                ,  4, 1, 31, 16 ) ); // #11
+  problems.push_back ( Problem ( "MINCOST_CH"           , "total investment cost"                , 11, 1, 32, 20 ) ); // #11
 }
 
 /*---------------------------------------------------------*/

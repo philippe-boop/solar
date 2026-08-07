@@ -55,6 +55,7 @@ private:
   double              _minHotStorageTemp;
   double              _minSteamGenOutletTemp;
   std::vector<double> _storageHeat;
+  double              _totalSaltMass; //P.B. 2026 : Used to compute c17 in problem 11
 
 public:
 
@@ -119,11 +120,13 @@ public:
   const	MoltenSalt     & get_steamGeneratorOutlet  ( void ) const { return _steamGeneratorOutlet;  }
   
   //P.B. 2026
-  double computeSaltDensity 	(double T)   {return _centralReceiverInlet.computeDensity(T);}
-  double get_maxSaltDensity   (void)       {return _centralReceiverInlet.computeDensity(_centralReceiverInlet.get_meltingPoint());}
-  double get_saltHeatCapacity (void) const {return _centralReceiverInlet.get_heatCapacity();}
-  double get_saltMeltingPoint (void) const {return _centralReceiverInlet.get_meltingPoint();}
-  double get_saltCost		      (void) const {return _centralReceiverInlet.get_cost();}
+  double computeSaltDensity 	    (double T)   {return _centralReceiverInlet.computeDensity(T);}
+  double get_minColdDensity       (void)       {return _centralReceiverInlet.computeDensity(_minColdStorageTemp);}
+  double get_saltHeatCapacity     (void) const {return _centralReceiverInlet.get_heatCapacity();}
+  double get_saltMeltingPoint     (void) const {return _centralReceiverInlet.get_meltingPoint();}
+  double get_saltCost		          (void) const {return _centralReceiverInlet.get_cost();}
+  double get_totalSaltMass        (void) const {return _totalSaltMass;}
+  double get_saltMaxOperatingTemp (void) const {return _centralReceiverInlet.get_maxOperatingTemp();}
 
   const	std::vector<double> & get_steamGenOutletMsRate ( void ) const { return _steamGenOutletMsRate; }
   const	std::vector<double> & get_steamGenOutletTemp   ( void ) const { return _steamGenOutletTemp;   }

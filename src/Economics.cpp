@@ -191,7 +191,7 @@ double Economics::evaluateCostOfStorage ( void ) {
 
   // double moltenSaltVolume  = _hotStorageHeight*1.1*PI*pow(_hotStorageDiameter / 2.0, 2.0); // OLD VERSION (v1)
   double moltenSaltVolume     = _coldStorageHeight   *PI*pow(_coldStorageDiameter / 2.0, 2.0); // NEW VERSION (v2, P.B., SLD, 2025-07-30)
-  double totalMoltenSaltMass = moltenSaltVolume*_saltDensity;
+  double totalMoltenSaltMass  = moltenSaltVolume*_saltDensity;
   double moltenSaltCost       = _costOfSaltPerKg * totalMoltenSaltMass; //P.B. 2026-06
 
   // OLD VERSION (v1):

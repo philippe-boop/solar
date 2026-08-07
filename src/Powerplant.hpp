@@ -128,6 +128,10 @@ public:
   double get_minColdStorageTemp           ( void ) const { return _moltenSaltLoop->get_minColdStorageTemp();}
   double get_minHotStorageTemp            ( void ) const { return _moltenSaltLoop->get_minHotStorageTemp(); }
   double get_minSteamGenTemp              ( void ) const { return _moltenSaltLoop->get_minSteamGenTemp();   }
+  double get_saltMeltingPoint             ( void ) const { return _moltenSaltLoop->get_saltMeltingPoint();  } //P.B. 2026-08
+  double get_totalSaltMass                ( void ) const { return _moltenSaltLoop->get_totalSaltMass();}
+  double compute_saltDensity              (double T)     { return _moltenSaltLoop->computeSaltDensity(T);}
+  double get_saltMaxOperatingTemp         ( void ) const { return _moltenSaltLoop->get_saltMaxOperatingTemp();}
 
   void set_demand         ( const std::vector<double>& demandVector ) { _demand = demandVector;     }
   void set_heliostatModel ( int                        hm           ) { _heliostatsFieldModel = hm; }

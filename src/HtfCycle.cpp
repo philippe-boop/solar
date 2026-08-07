@@ -801,6 +801,7 @@ void HtfCycle::initiateColdStorage ( void ) {
   double storedTemperature = _minColdStorageTemp;
   double storedMass        = volume * computeSaltDensity(storedTemperature); //P.B. 2026-06
   _coldStorage.set_storage(storedMass, storedTemperature);
+  _totalSaltMass = storedMass;
 }
 
 /*---------------------------------------------------------------------------------*/

@@ -827,19 +827,16 @@ void print_minCost_CH ( std::ostream & out ) {
   out << "\n-----------------------------------------------------------------\n"
       << "Parameters:\n"
       << "\tWhole plant\n"
-      << "\tLatitude: 35 deg N\n"
+      << "\tLatitude: 30 deg N\n"
       << "\tDay: January 1st\n"
       << "\tDuration: 24 hours\n"
-      << "\tDemand profile: 25MW, starting at 3PM and ending at 9PM, 3 consecutive days\n"
-      << "\tMaximum field surface area: 200 hectares\n"
+      << "\tDemand profile: 20MW, starting at 3PM and ending at 9PM, 3 consecutive days\n"
+      << "\tMaximum field surface area: 500 hectares\n"
       << "\tMust provide 100% of the demand requirement\n"
-      << "\tThis instance is the same as instance 4 but with new variables\n"
-      << "\tcold storage height and diameter, and fixed bugs related to\n"
-      << "\teconomics and insulation thicknesses"
       << std::endl
 
       << "Objective (first output)\n"
-      << "\tMinimize the cost of powerplant to respect a given demand with a limited size of field ($)\n"
+      << "\tMinimize the cost of powerplant to respect a given demand ($)\n"
       << std::endl  
 
       << "Variables:\n"
@@ -851,44 +848,45 @@ void print_minCost_CH ( std::ostream & out ) {
       << "\t\t x5: Receiver aperture width  (m)                   : Real in [ 1; 30]\n"
       << "\t\t x6: Number of heliostats to fit in the field       : Integer >= 1\n"
       << "\t\t x7: Field angular width (deg)                      : Real in [1;89]\n"
-      << "\t\t x8: Minimum distance from tower (% of tower height): Real in [0;20]\n"
-      << "\t\t x9: Maximum distance from tower (% of tower height): Real in [1;20]\n"
+      << "\t\t x8: Minimum distance from tower (Multiple of tower height): Real in [0;20]\n"
+      << "\t\t x9: Maximum distance from tower (Multiple of tower height): Real in [1;20]\n"
       << "\tHeat transfer loop:\n"
-      << "\t\tx10: Receiver outlet temperature (K)      : Real in [793;995]\n"
+      << "\t\tx10: Receiver outlet temperature (K)      : Real in [600;1073.15]\n"
       << "\t\tx11: Hot storage height    (m)            : Real in [1;50]\n"
       << "\t\tx12: Cold storage height   (m)            : Real in [1;50]\n" 
       << "\t\tx13: Hot storage diameter  (m)            : Real in [1;30]\n"
       << "\t\tx14: Cold storage diameter (m)            : Real in [1;30]\n"
       << "\t\tx15: Hot storage insulation thickness  (m): Real in [0.01;5]\n"
       << "\t\tx16: Cold storage insulation thickness (m): Real in [0.01;5]\n"
-      << "\t\tx17: Mininum cold storage temperature  (K): Real in [495;650]\n"
+      << "\t\tx17: Mininum cold storage temperature  (K): Real in [361.75;900]\n"
       << "\t\tx18: Receiver number of tubes             : Integer in {1,2,...,7853}\n"
       << "\t\tx19: Receiver insulation thickness     (m): Real in [0.01 ;5  ]\n"
       << "\t\tx20: Receiver tubes inner diameter     (m): Real in [0.005;0.1]\n"
       << "\t\tx21: Receiver tubes outer diameter     (m): Real in [0.006;0.1]\n"
+      << "\t\tx22: Type of molten salt: Categorical: Integer in {1, 2, ..., 5}\n"
       << "\tSteam generator:\n"
-      << "\t\tx22: Tubes spacing (m)       : Real in [0.007;0.2]\n"
-      << "\t\tx23: Tubes length  (m)       : Real in [0.5;10]\n"
-      << "\t\tx24: Tubes inner diameter (m): Real in [0.005;0.1]\n"
-      << "\t\tx25: Tubes outer diameter (m): Real in [0.006;0.1]\n"
-      << "\t\tx26: Baffles cut             : Real in [0.15;0.4]\n"
-      << "\t\tx27: Number of baffles       : Integer >= 2\n"   
-      << "\t\tx28: Number of tubes         : Integer >= 1\n"
-      << "\t\tx29: Number of shell passes  : Integer in {1, 2, ..., 10}\n"
-      << "\t\tx30: Number of tubes passes  : Integer in {1, 2, ..., 9}\n"   
+      << "\t\tx23: Tubes spacing (m)       : Real in [0.007;0.2]\n"
+      << "\t\tx24: Tubes length  (m)       : Real in [0.5;10]\n"
+      << "\t\tx25: Tubes inner diameter (m): Real in [0.005;0.1]\n"
+      << "\t\tx26: Tubes outer diameter (m): Real in [0.006;0.1]\n"
+      << "\t\tx27: Baffles cut             : Real in [0.15;0.4]\n"
+      << "\t\tx28: Number of baffles       : Integer >= 2\n"   
+      << "\t\tx29: Number of tubes         : Integer >= 1\n"
+      << "\t\tx30: Number of shell passes  : Integer in {1, 2, ..., 10}\n"
+      << "\t\tx31: Number of tubes passes  : Integer in {1, 2, ..., 9}\n"   
       << "\tPowerblock:\n"
-      << "\t\tx31: Type of turbine: Categorical: Integer in {1, 2, ..., 8}\n"
+      << "\t\tx32: Type of turbine: Categorical: Integer in {1, 2, ..., 8}\n"
       << std::endl
-      << "Constraints (outputs 2 to 17 with format ci <= 0):\n"
-      << "\t c1: Field surface area: A priori constraint: PI*x3*x3(x9*x9-x8*x8) * x7/180 <= 2e6\n"
+      << "Constraints (outputs 2 to 21 with format ci <= 0):\n"
+      << "\t c1: Field surface area: A priori constraint: PI*x3*x3(x9*x9-x8*x8) * x7/180 <= 5e6\n"
       << "\t c2: Compliance to demand (stochastic)\n"
       << "\t c3: Tower is at least twice as high as heliostats       : A priori, linear constraint: 2x1 <= x3\n"
       << "\t c4: Min. distance from tower <= max. distance from tower: A priori, linear constraint:  x8 <= x9\n"   
       << "\t c5: Check that x6 heliostats can fit in the field\n"
       << "\t c6: Pressure in receiver tubes <= yield pressure (stochastic)\n"
-      << "\t c7: Molten salt melting point  <= hot storage lowest temperature     (stochastic)\n"  
-      << "\t c8: Molten salt melting point  <= cold storage lowest temperature    (stochastic)\n"
-      << "\t c9: Molten salt melting point  <= steam generator outlet temperature (stochastic)\n"   
+      << "\t c7: Molten salt melting point  <= hot storage lowest temperature            (stochastic)\n"  
+      << "\t c8: Molten salt melting point  <= cold storage lowest temperature           (stochastic)\n"
+      << "\t c9: Molten salt melting point  <= steam generator outlet lowest temperature (stochastic)\n"   
       << "\tc10: Receiver tubes inside diameter <= outside diameter: A priori, linear constraint: x18 <= x19\n"
       << "\tc11: Number of tubes in receiver fit inside receiver: A priori constraint: x16*x19 <= x5*PI/2\n"
       << "\tc12: Receiver outlet temperature >= steam turbine inlet temperature\n"
@@ -896,14 +894,18 @@ void print_minCost_CH ( std::ostream & out ) {
       << "\tc14: Steam generator tubes outer diameter  <= tubes spacing: A priori, linear constraint: x23 <= x20\n"
       << "\tc15: Steam generator tubes inside diameter <= Steam generator tubes outer diameter: A priori, linear constraint: x22 <= x23\n"
       << "\tc16: Pressure in steam generator tubes <= yield pressure\n"
+      << "\tc17: Hot storage is big enough to compensate for the decrease in density\n"
+      << "\tc18: Receiver outlet temperature does not exceed salt's max operating temperature\n"
+      << "\tc19: Steam generator outlet temperature is higher than salt's melting point\n"
+      << "\tc20: Steam generator outlet temperature is lower than receiver outlet temperature: A priori: x17 <= x10 "
 
       << "\n-----------------------------------------------------------------\n"
       << "NOMAD parameters:\n\n"
-      << "\tDIMENSION        " << 31 << std::endl
+      << "\tDIMENSION        " << 32 << std::endl
       << "\tBB_EXE           " << "$SOLAR_HOME/bin/solar $11" << std::endl
-      << "\tBB_OUTPUT_TYPE   " << "OBJ CSTR CSTR CSTR CSTR CSTR CSTR CSTR CSTR CSTR CSTR CSTR CSTR CSTR CSTR CSTR CSTR" << std::endl
-      << "\tBB_INPUT_TYPE    " << "(    R    R     R    R    R    I    R    R    R     R    R  R        R     R     R    R     R    I    R      R     R     R    R      R     R    R I     I  I I I)"  << std::endl
-      << "\tLOWER_BOUND      " << "(  1.0  1.0  20.0  1.0  1.0    1  1.0  0.0  1.0 793.0  1.0   1.0   1.0   1.0  0.01 0.01 495.0    1 0.01 0.0050 0.006 0.007  0.5 0.0050 0.006 0.15 2     1  1 1 1)"  << std::endl
-      << "\tX0               " << "(  9.0  9.0 150.0  6.0  8.0 1000 45.0  0.5  5.0 900.0  9.0   9.0   9.0   9.0  0.30 0.20 560.0  500 0.30 0.0165 0.018 0.017 10.0 0.0155 0.016 0.20 3 12000  1 2 2)"  << std::endl  
-      << "\tUPPER_BOUND      " << "( 40.0 40.0 250.0 30.0 30.0    - 89.0 20.0 20.0 995.0 50.0  50.0  30.0  30.0  5.00 5.00 650.0 7853 5.00 0.1000 0.100 0.200 10.0 0.1000 0.100 0.40 -     - 10 9 8)"  << std::endl;
+      << "\tBB_OUTPUT_TYPE   " << "OBJ CSTR CSTR CSTR CSTR CSTR CSTR CSTR CSTR CSTR CSTR CSTR CSTR CSTR CSTR CSTR CSTR CSTR CSTR CSTR CSTR" << std::endl
+      << "\tBB_INPUT_TYPE    " << "(    R    R     R    R    R    I    R    R    R     R      R     R     R     R     R    R      R    I    R      R     R  I      R    R      R     R    R I     I  I I I)"  << std::endl
+      << "\tLOWER_BOUND      " << "(  1.0  1.0  20.0  1.0  1.0    1  1.0  0.0  1.0 600.0    1.0   1.0   1.0   1.0  0.01 0.01 361.75    1 0.01 0.0050 0.006  1  0.007  0.5 0.0050 0.006 0.15 2     1  1 1 1)"  << std::endl
+      << "\tX0               " << "(  9.0  9.0 150.0  6.0  8.0 1000 45.0  0.5  5.0 900.0    9.0   9.0   9.0   9.0  0.30 0.20  560.0  500 0.30 0.0165 0.018  1  0.017 10.0 0.0155 0.016 0.20 3 12000  1 2 2)"  << std::endl  
+      << "\tUPPER_BOUND      " << "( 40.0 40.0 250.0 30.0 30.0    - 89.0 20.0 20.0 1073.15 50.0  50.0  30.0  30.0  5.00 5.00  900.0 7853 5.00 0.1000 0.100  5  0.200 10.0 0.1000 0.100 0.40 -     - 10 9 8)"  << std::endl;
 }

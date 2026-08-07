@@ -690,7 +690,12 @@ void Evaluator::display_outputs ( void ) const {
 	 << std::setprecision(10) << _outputs[13] << " "
 	 << std::setprecision(12) << _outputs[14] << " "
 	 << _outputs[15] << " "
-	 << _outputs[16] << std::setprecision(12);
+	 << _outputs[16] << std::setprecision(12)<< " "
+   << _outputs[17] << " "
+   << _outputs[18] << " "
+   << _outputs[19] << " "
+   << _outputs[20] << " "
+   ;
 }
 
 void Evaluator::display_intermediate_outputs ( void ) const {

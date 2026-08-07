@@ -54,7 +54,7 @@ MoltenSalt::MoltenSalt ( double temp, double pres, double masf, int id ) :
     
     switch (id) {
       
-      //60% NaNO3 - 40% KNO3 (Solar salt). Used in instances 1-11.
+      //60% NaNO3 - 40% KNO3 (Solar salt). Used in instances 1-10.
       case 0:
       _meltingPoint     = 495.0;
       _maxOperatingTemp = 0.0;  //Max. operating temperature is the upper bound of receiver outlet temp.
